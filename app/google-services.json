@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "390391996711",
+    "firebase_url": "https://uber-clone-1d92d-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "uber-clone-1d92d",
+    "storage_bucket": "uber-clone-1d92d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:390391996711:android:9d71678bb64ef54c0a4902",
+        "android_client_info": {
+          "package_name": "udemy.java.uber_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrrSf-EE5Zu8LFifYBPht6NWxHfle1lTA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
