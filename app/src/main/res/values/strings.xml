@@ -8,4 +8,6 @@
     <string name="email_v_lido">Email válido</string>
     <string name="nome_completo">Nome Completo</string>
     <string name="entar">Entar</string>
+    <string name="passegeiro">Passegeiro</string>
+    <string name="motorista">Motorista</string>
 </resources>

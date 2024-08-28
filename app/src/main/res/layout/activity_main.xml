@@ -46,7 +46,7 @@
                 android:textAllCaps="true"
                 app:backgroundTint="@null"
                 android:textColor="@color/white_100"
-                android:background="@drawable/dw_recangle_green"
+                android:background="@drawable/button_ripple_effect_green_hot"
                />
 
             <View
@@ -63,7 +63,7 @@
                 android:textAllCaps="true"
                 app:backgroundTint="@null"
                 android:textColor="@color/white_100"
-                android:background="@drawable/dw_rectangle_grey_green"
+                android:background="@drawable/button_ripple_effect_green_grey"
                 />
 
         </LinearLayout>

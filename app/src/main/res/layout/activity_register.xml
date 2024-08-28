@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginBottom="16dp"
+        style="@style/TextInputLayoutStyle"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -31,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginBottom="250dp"
+        style="@style/TextInputLayoutStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,6 +51,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="2dp"
         android:layout_marginTop="16dp"
+        style="@style/TextInputLayoutStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
@@ -56,6 +59,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black_100"
+            android:inputType="textPassword"
             android:hint="@string/senha" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,31 +69,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:background="@drawable/dw_recangle_green"
         android:text="@string/criar"
         android:textAllCaps="true"
         android:textColor="@color/white_100"
         app:backgroundTint="@null"
+        android:background="@drawable/button_ripple_effect_green_hot"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch1" />
+        app:layout_constraintTop_toBottomOf="@+id/switch_selectTypeUser" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="Motorista"
-        app:layout_constraintBottom_toBottomOf="@+id/switch1"
+        android:layout_marginStart="16dp"
+        android:text="@string/motorista"
+        android:textColor="@color/black_100"
+        app:layout_constraintBottom_toBottomOf="@+id/switch_selectTypeUser"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/switch1"
-        app:layout_constraintTop_toTopOf="@+id/switch1" />
+        app:layout_constraintStart_toEndOf="@+id/switch_selectTypeUser"
+        app:layout_constraintTop_toTopOf="@+id/switch_selectTypeUser" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/switch_selectTypeUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:thumb="@drawable/custom_thumb"
+        android:track="@drawable/custom_track"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
@@ -97,12 +104,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:text="Passegeiro"
-        app:layout_constraintBottom_toBottomOf="@+id/switch1"
-        app:layout_constraintEnd_toStartOf="@+id/switch1"
+        android:layout_marginEnd="16dp"
+        android:text="@string/passegeiro"
+        android:textColor="@color/black_100"
+        app:layout_constraintBottom_toBottomOf="@+id/switch_selectTypeUser"
+        app:layout_constraintEnd_toStartOf="@+id/switch_selectTypeUser"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/switch1" />
+        app:layout_constraintTop_toTopOf="@+id/switch_selectTypeUser" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
