@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Uber_clone</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="entrar">Entrar</string>
+    <string name="criar_conta">Criar Conta</string>
+    <string name="criar">Criar</string>
+    <string name="senha">Senha</string>
+    <string name="email_v_lido">Email válido</string>
+    <string name="nome_completo">Nome Completo</string>
+    <string name="entar">Entar</string>
 </resources>
