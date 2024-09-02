@@ -25,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.green_100));
+            actionBar.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.limedSprude_100));
             actionBar.setTitle("Aceder a minha conta");
         }
     }

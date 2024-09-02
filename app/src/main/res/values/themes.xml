@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Uber_clone" parent="Theme.Material3.Dark">
         <!-- Customize your light theme here. -->
-        <item name="colorPrimary">@color/greenBlack_100</item>
-        <item name="colorPrimaryVariant">@color/green_100</item>
-        <item name="colorAccent">@color/greenGrey_100</item>
+        <item name="colorPrimary">@color/gunmetal_100</item>
+        <item name="colorPrimaryVariant">@color/limedSprude_100</item>
+        <item name="colorAccent">@color/marbleBlue_100</item>
 
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
@@ -12,9 +12,9 @@
     <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="hintTextColor">@color/black_100</item>
         <item name="errorTextColor">@color/red_100</item>
-        <item name="boxStrokeColor">@color/black_100</item>
+        <item name="boxStrokeColor">@color/limedSprude_100</item>
     </style>
-gfhd
+
     <style name="Theme.Uber_clone" parent="Base.Theme.Uber_clone"/>
 
 

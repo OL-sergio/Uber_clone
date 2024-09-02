@@ -6,7 +6,7 @@
             <size android:width="@dimen/_25sdp"
                 android:height="@dimen/_25sdp"/>
             <stroke android:width="1dp"
-                android:color="@color/greenBlack_100"/>
+                android:color="@color/gunmetal_100"/>
         </shape>
     </item>
     <item android:state_checked="true">
@@ -15,7 +15,7 @@
             <size android:width="@dimen/_25sdp"
                 android:height="@dimen/_25sdp"/>
             <stroke android:width="1dp"
-                android:color="@color/greenHot_100"/>
+                android:color="@color/topaz_100"/>
         </shape>
     </item>
 </selector>
