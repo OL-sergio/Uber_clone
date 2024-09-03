@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -18,11 +20,13 @@
         <activity
             android:name=".activity.LoginActivity"
             android:exported="false"
+            android:label="@string/aceder_a_minha_conta"
             android:parentActivityName=".MainActivity"
             />
         <activity
             android:name=".activity.RegisterActivity"
             android:exported="false"
+            android:label="@string/criar_uma_conta"
             android:parentActivityName=".MainActivity"
             />
         <!--

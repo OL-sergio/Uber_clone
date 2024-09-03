@@ -45,10 +45,14 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.play.services.maps)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    //Firebase
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.auth)
     implementation(platform(libs.firebase.bom))
 
 }

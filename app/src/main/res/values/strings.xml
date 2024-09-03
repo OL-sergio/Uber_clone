@@ -10,4 +10,6 @@
     <string name="entar">Entar</string>
     <string name="passegeiro">Passegeiro</string>
     <string name="motorista">Motorista</string>
+    <string name="aceder_a_minha_conta">Aceder a minha conta</string>
+    <string name="criar_uma_conta">Criar uma conta</string>
 </resources>
