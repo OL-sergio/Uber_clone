@@ -1,19 +1,13 @@
-package udemy.java.uber_clone;
+package udemy.java.uber_clone.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Objects;
 
-import udemy.java.uber_clone.activity.LoginActivity;
-import udemy.java.uber_clone.activity.RegisterActivity;
 import udemy.java.uber_clone.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {

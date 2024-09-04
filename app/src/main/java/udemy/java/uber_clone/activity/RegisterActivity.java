@@ -1,39 +1,36 @@
 package udemy.java.uber_clone.activity;
 
-import static android.content.ContentValues.TAG;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.auth.User;
+
 
 import java.util.Objects;
 
 import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
-import udemy.java.uber_clone.databinding.ActivityLoginBinding;
-import udemy.java.uber_clone.databinding.ActivityMainBinding;
 import udemy.java.uber_clone.databinding.ActivityRegisterBinding;
+import udemy.java.uber_clone.helpers.UserFirebase;
 import udemy.java.uber_clone.model.Users;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -47,7 +44,6 @@ public class RegisterActivity extends AppCompatActivity {
     private Button buttonRegister;
 
     private FirebaseAuth auth;
-    @SuppressLint("RestrictedApi")
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +64,6 @@ public class RegisterActivity extends AppCompatActivity {
                     validateUserRegister(view);
                 }
         );
-
     }
 
     private void validateUserRegister(View view) {
@@ -84,7 +79,6 @@ public class RegisterActivity extends AppCompatActivity {
                     users.setEmail(textEmail);
                     users.setPassword(textPassword);
                     users.setUserType(getUserType());
-                        
                     createUser(users);
 
                 }else {
@@ -108,29 +102,58 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()){
+                        try {
 
                             FirebaseUser userId = auth.getCurrentUser();
                             assert userId != null;
                             users.setId(userId.getUid());
                             users.saveUser();
 
-                        Toast.makeText(RegisterActivity.this, "Utilizador criado com sucesso!", Toast.LENGTH_SHORT).show();
+                            UserFirebase.upadteUserName(users.getName());
+
+                            if (getUserType() == "P" ){
+                                startActivity(new Intent(RegisterActivity.this, MapsActivity.class));
+                                finish();
+                                Toast.makeText(RegisterActivity.this, R.string.utilizador_passageiro_criado_com_sucesso, Toast.LENGTH_SHORT).show();
+                            }else {
+                                startActivity(new Intent(RegisterActivity.this, RequestsActivity.class));
+                                finish();
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+
+                            Toast.makeText(RegisterActivity.this, "Utilizadir Motorista criado com sucesso!", Toast.LENGTH_SHORT).show();
+                        }
+
                     }else {
-                        Toast.makeText(RegisterActivity.this, "Erro ao criar utilizador!", Toast.LENGTH_SHORT).show();
+
+                        String exceptionError;
+
+                        try {
+                            throw Objects.requireNonNull(task.getException());
+                        } catch (FirebaseAuthWeakPasswordException e){
+                            exceptionError = getString(R.string.intreduza_uma_senha_mais_forte);
+                        } catch (FirebaseAuthInvalidCredentialsException e) {
+                            exceptionError = getString(R.string.intreduza_um_email_v_lido);
+                        } catch (FirebaseAuthUserCollisionException e){
+                            exceptionError = getString(R.string.este_email_j_est_em_uso);
+                        }catch (Exception e) {
+                            exceptionError = getString(R.string.erro_ao_criar_utilizador) + e.getMessage();
+                            e.printStackTrace();
+                        }
+
+                        Toast.makeText(RegisterActivity.this, exceptionError, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
     }
 
-
     public String getUserType(){
-
         //return switchUserType.isChecked() ? "true" : "false";
         //D = driver - P = passenger
         return switchUserType.isChecked() ? "D" : "P";
-
     }
-
 
     private void components() {
 
@@ -139,7 +162,6 @@ public class RegisterActivity extends AppCompatActivity {
             password = binding.textInputEditTextRegisterPassword;
             switchUserType = binding.switchSelectTypeUser;
             buttonRegister = binding.buttonRegisterUser;
-
 
     }
 

@@ -12,4 +12,14 @@
     <string name="motorista">Motorista</string>
     <string name="aceder_a_minha_conta">Aceder a minha conta</string>
     <string name="criar_uma_conta">Criar uma conta</string>
+    <string name="utilizador_passageiro_criado_com_sucesso">Utilizador Passageiro criado com sucesso!</string>
+    <string name="intreduza_uma_senha_mais_forte">Intreduza uma senha mais forte</string>
+    <string name="intreduza_um_email_v_lido">Intreduza um email válido!</string>
+    <string name="este_email_j_est_em_uso">Este email já está em uso!</string>
+    <string name="erro_ao_criar_utilizador">Erro ao criar utilizador!</string>
+    <string name="utilizador_registado_com_sucesso">Utilizador registado com sucesso!</string>
+    <string name="erro_realizar_login_utilizador">Erro realizar login utilizador!</string>
+    <string name="utilizador_n_o_registado">Utilizador não registado</string>
+    <string name="email_ou_password_incorretos">Email ou password incorretos</string>
+    <string name="login_realizado_com_sucesso">Acesso realizado com sucesso!</string>
 </resources>
