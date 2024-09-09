@@ -119,12 +119,4 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin = binding.buttonLogin;
 
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        UserFirebase.rediretUserLoogedIn(this);
-        finish();
-    }
-
 }

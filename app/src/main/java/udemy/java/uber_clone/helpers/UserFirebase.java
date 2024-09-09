@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import udemy.java.uber_clone.activity.MapsActivity;
+import udemy.java.uber_clone.activity.PassengerActivity;
 import udemy.java.uber_clone.activity.RequestsActivity;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.model.Users;
@@ -69,7 +69,7 @@ public class UserFirebase {
                         System.out.println("Driver");
 
                     } else if ( userType.equals("P") ) {
-                        activity.startActivity(new Intent(activity, MapsActivity.class));
+                        activity.startActivity(new Intent(activity, PassengerActivity.class));
                         System.out.println("Passenger");
                     }
                 }

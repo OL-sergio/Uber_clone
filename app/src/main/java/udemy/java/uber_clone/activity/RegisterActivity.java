@@ -112,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
                             UserFirebase.upadteUserName(users.getName());
 
                             if (getUserType() == "P" ){
-                                startActivity(new Intent(RegisterActivity.this, MapsActivity.class));
+                                startActivity(new Intent(RegisterActivity.this, PassengerActivity.class));
                                 finish();
                                 Toast.makeText(RegisterActivity.this, R.string.utilizador_passageiro_criado_com_sucesso, Toast.LENGTH_SHORT).show();
                             }else {

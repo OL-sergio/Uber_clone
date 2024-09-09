@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:background="@drawable/button_ripple_effect_green_hot"
+        android:background="@drawable/dw_button_ripple_effect_green_hot"
         app:backgroundTint="@null"
         android:text="@string/entar"
         android:textAllCaps="true"

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Uber_clone</string>
     <string name="title_activity_maps">MapsActivity</string>
@@ -22,4 +23,15 @@
     <string name="utilizador_n_o_registado">Utilizador não registado</string>
     <string name="email_ou_password_incorretos">Email ou password incorretos</string>
     <string name="login_realizado_com_sucesso">Acesso realizado com sucesso!</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="iniciar_uma_viagem">Iniciar uma viagem</string>
+    <string name="sair">Sair</string>
+    <string name="interduza_o_destino">Interduza o destino</string>
+    <string name="interduza_sua_localizac_o">Interduza sua localizacão</string>
+    <string name="chamar_uber">Chamar Uber</string>
 </resources>

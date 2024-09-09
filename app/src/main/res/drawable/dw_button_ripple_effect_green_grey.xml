@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/white_100"
-
-    > <!-- Ripple color :: WHITE -->
+    android:color="@color/white_100">
+    <!-- Ripple color :: WHITE -->
 
     <item>
-        <!-- Normal bg color :: RED -->
-        <shape xmlns:android="http://schemas.android.com/apk/res/android"
-            android:shape="rectangle" >
+        <!-- Normal bg color  -->
+        <shape android:shape="rectangle" >
             <solid android:color="@color/limedSprude_100" />
             <corners android:radius="4dp" />
         </shape>
