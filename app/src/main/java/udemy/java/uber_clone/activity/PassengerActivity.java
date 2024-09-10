@@ -1,6 +1,12 @@
 package udemy.java.uber_clone.activity;
 
+import android.Manifest;
+import android.app.LocaleManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,14 +15,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.core.Context;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -31,6 +40,8 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityPassengerBinding binding;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     private GoogleMap mMap;
     private FirebaseAuth auth;
@@ -70,10 +81,55 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
+        recoverUserLocation();
+
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
+    }
+
+    private void recoverUserLocation() {
+
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                LatLng myLocation = new LatLng(latitude, longitude);
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(myLocation)
+                        .title("My location")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.usuario))
+                );
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
+
+            }
+
+            @Override
+            public void onProviderEnabled(@NonNull String provider) {
+                LocationListener.super.onProviderEnabled(provider);
+            }
+
+        };
+
+        if (ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        ) {
+
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    10000,
+                    20,
+                    locationListener
+            );
+        }
     }
 
     @Override

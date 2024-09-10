@@ -67,6 +67,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/_8sdp"
             android:ems="10"
             android:enabled="false"
             android:inputType="text"
