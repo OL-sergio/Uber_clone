@@ -10,6 +10,8 @@ public class Users {
     private String email;
     private String password;
     private String userType;
+    private String latitude;
+    private String longitude;
 
     public Users() {
     }
@@ -61,5 +63,21 @@ public class Users {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

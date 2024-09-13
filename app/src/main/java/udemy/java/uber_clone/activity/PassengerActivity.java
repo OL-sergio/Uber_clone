@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.auth.User;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -42,7 +43,10 @@ import java.util.Locale;
 import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.databinding.ActivityPassengerBinding;
+import udemy.java.uber_clone.helpers.UserFirebase;
 import udemy.java.uber_clone.model.Destination;
+import udemy.java.uber_clone.model.Request;
+import udemy.java.uber_clone.model.Users;
 
 public class PassengerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -58,6 +62,8 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
     private LocationListener locationListener;
     private GoogleMap mMap;
     private FirebaseAuth auth;
+    private LatLng passegerLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +150,8 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-
+                                //save request destination
+                                saveRequest(destination);
 
                             }
 
@@ -160,6 +167,19 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         }
 
 
+    }
+
+    private void saveRequest(Destination destination) {
+        Request request = new Request();
+        request.setDestination(destination);
+
+        Users userPasseger =  UserFirebase.getUserLogged();
+        userPasseger.setLatitude( String.valueOf(passegerLocation.latitude) );
+        userPasseger.setLongitude( String.valueOf(passegerLocation.longitude) );
+
+        request.setPassenger( userPasseger );
+        request.setStatus( Request.STATUS_WAITING );
+        request.saveRequest();
     }
 
     private Address recoverAddress(String destinationText) {
@@ -188,15 +208,15 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
             public void onLocationChanged(@NonNull Location location) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                LatLng myLocation = new LatLng(latitude, longitude);
+                passegerLocation = new LatLng(latitude, longitude);
 
                 mMap.addMarker(new MarkerOptions()
-                        .position(myLocation)
+                        .position(passegerLocation)
                         .title("My location")
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.usuario))
                 );
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(passegerLocation, 18));
 
             }
 

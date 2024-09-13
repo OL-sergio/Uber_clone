@@ -12,6 +12,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.auth.User;
 
 import udemy.java.uber_clone.activity.PassengerActivity;
 import udemy.java.uber_clone.activity.RequestsActivity;
@@ -25,6 +26,21 @@ public class UserFirebase {
         return user.getCurrentUser();
 
     }
+
+
+private static Users getUserDataLogged(){
+        FirebaseUser firebaseUser = getUserFirebase();
+        Users user = new Users();
+        user.setId(firebaseUser.getUid());
+        user.setName(firebaseUser.getDisplayName());
+        user.setEmail(firebaseUser.getEmail());
+        return user;
+    }
+
+    public static Users getUserLogged() {
+        Users user = getUserDataLogged();
+        return user;
+}
 
     public static boolean upadteUserName(String name) {
         try {
