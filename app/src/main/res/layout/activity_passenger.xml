@@ -23,14 +23,10 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
-        layout="@layout/content_passenger"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <include layout="@layout/content_passenger" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -45,63 +41,56 @@
 
 
         <EditText
-            android:id="@+id/editTextText_destination"
+            android:id="@+id/editTextText_origin"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="1"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
-            android:ems="10"
-            android:enabled="false"
-            android:hint="@string/interduza_sua_localizac_o"
+            android:layout_weight="1"
             android:background="@color/white_100"
+            android:drawableStart="@drawable/dw_circle_green"
             android:drawablePadding="@dimen/_10sdp"
-            android:drawableLeft="@drawable/dw_circle_green"
+            android:ems="10"
+            android:hint="@string/interduza_sua_localizac_o"
+            android:inputType="textPersonName"
             android:textColor="@color/limedSprude_100"
             android:textColorHint="@color/limedSprude_100"
-            android:textSize="@dimen/_18sp"
-            />
+            android:textSize="@dimen/_18sp" />
 
         <EditText
-            android:id="@+id/editTextText2"
+            android:id="@+id/editTextText_destination"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="1"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="@dimen/_8sdp"
-            android:ems="10"
-            android:enabled="false"
-            android:inputType="text"
+            android:layout_weight="1"
             android:background="@color/white_100"
-            android:hint="@string/interduza_o_destino"
+            android:drawableStart="@drawable/dw_circle_grey"
             android:drawablePadding="@dimen/_10sdp"
-            android:drawableLeft="@drawable/dw_circle_grey"
+            android:ems="10"
+            android:hint="@string/interduza_o_destino"
+            android:inputType="textPersonName"
             android:textColor="@color/limedSprude_100"
             android:textColorHint="@color/limedSprude_100"
-            android:textSize="@dimen/_18sp"
-            />
+            android:textSize="@dimen/_18sp" />
+
     </LinearLayout>
 
-    <LinearLayout
+
+    <Button
+        android:id="@+id/button_callUber"
+        style="@style/buttonStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@null"
+        android:text="@string/chamar_uber"
+        android:textAllCaps="true"
+        android:textColor="@color/white_100"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/button_goToMapLocation"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="@string/chamar_uber"
-            android:textStyle="bold"
-            android:textAllCaps="true"
-            android:textColor="@color/white_100"
-            android:backgroundTint="@null"
-            style="@style/buttonStyle"
-            />
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
