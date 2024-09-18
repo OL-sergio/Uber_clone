@@ -10,6 +10,7 @@ public class Users {
     private String email;
     private String password;
     private String userType;
+
     private String latitude;
     private String longitude;
 

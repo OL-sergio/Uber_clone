@@ -34,4 +34,9 @@
     <string name="interduza_o_destino">Interduza o destino</string>
     <string name="interduza_sua_localizac_o">Interduza sua localizacão</string>
     <string name="chamar_uber">Chamar Uber</string>
+    <string name="cancelar_uber">Cancelar Uber</string>
+    <string name="requests">Requests</string>
+    <string name="aguardando_pedidos">Aguardando pedidos…</string>
+    <string name="_0km_aproximadamente">0km - aproximadamente</string>
+    <string name="nome_do_passageiro">Nome do passageiro</string>
 </resources>

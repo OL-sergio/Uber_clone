@@ -3,10 +3,10 @@
     <dimen name="_10sdp">10sp</dimen>
     <dimen name="_25sdp">25sp</dimen>
     <dimen name="_8sdp">8sp</dimen>
-    <dimen name="_16sp">16sp</dimen>
-    <dimen name="_18sp">18sp</dimen>
-    <dimen name="_4dp">4dp</dimen>
-    <dimen name="_36dp">36dp</dimen>
-    <dimen name="_22dp">22dp</dimen>
+    <dimen name="_16sdp">16sp</dimen>
+    <dimen name="_18sdp">18sp</dimen>
+    <dimen name="_4sdp">4sp</dimen>
+    <dimen name="_36sdp">36dp</dimen>
+    <dimen name="_22sdp">22dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 </resources>

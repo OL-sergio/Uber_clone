@@ -16,14 +16,20 @@
         android:theme="@style/Theme.Uber_clone"
         android:usesCleartextTraffic="true"
         tools:targetApi="31" >
+
         <activity
             android:name=".activity.PassengerActivity"
             android:exported="false"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:theme="@style/Theme.Design.NoActionBar"
+            android:parentActivityName=".activity.MainActivity"
+            />
 
         <activity
             android:name=".activity.RequestsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Design.NoActionBar"
+            android:parentActivityName=".activity.MainActivity"/>
+
         <activity
             android:name=".activity.LoginActivity"
             android:exported="false"
@@ -33,7 +39,7 @@
             android:name=".activity.RegisterActivity"
             android:exported="false"
             android:label="@string/criar_uma_conta"
-            android:parentActivityName=".activity.MainActivity" />
+            android:parentActivityName=".activity.MainActivity"/>
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -50,10 +56,6 @@
             android:value="AIzaSyAOMMB65ILJ3mHmxbC-5P_gPWeIrtW5gfQ" />
 
         <activity
-            android:name=".activity.MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps" />
-        <activity
             android:name=".activity.MainActivity"
             android:exported="true" >
             <intent-filter>
@@ -62,6 +64,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

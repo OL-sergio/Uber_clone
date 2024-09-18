@@ -28,7 +28,7 @@ public class UserFirebase {
     }
 
 
-private static Users getUserDataLogged(){
+public static Users getUserDataLogged(){
         FirebaseUser firebaseUser = getUserFirebase();
         Users user = new Users();
         user.setId(firebaseUser.getUid());
@@ -36,11 +36,6 @@ private static Users getUserDataLogged(){
         user.setEmail(firebaseUser.getEmail());
         return user;
     }
-
-    public static Users getUserLogged() {
-        Users user = getUserDataLogged();
-        return user;
-}
 
     public static boolean upadteUserName(String name) {
         try {

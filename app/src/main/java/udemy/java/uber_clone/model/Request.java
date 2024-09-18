@@ -1,6 +1,7 @@
 package udemy.java.uber_clone.model;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.auth.User;
 
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 
