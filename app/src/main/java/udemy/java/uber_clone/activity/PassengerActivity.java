@@ -76,11 +76,11 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
     private LocationManager locationManager;
     private LocationListener locationListener;
     private GoogleMap mMap;
-    private FirebaseAuth auth;
     private LatLng passegerLocation;
+
+    private FirebaseAuth auth;
     private DatabaseReference databaseReference;
     private Request request;
-    private Users userPasseger;
 
     private boolean uberRequest = false;
 
@@ -92,11 +92,8 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         binding = ActivityPassengerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
-
         components();
         verifyRequestStatus();
-        
 
       /*  NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_passenger);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
@@ -143,10 +140,6 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
 
             }
         });
-
-
-
-
     }
 
 
@@ -230,8 +223,8 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         request.setDestination(destination);
 
         Users user = UserFirebase.getUserDataLogged();
-        userPasseger.setLatitude( String.valueOf(passegerLocation.latitude) );
-        userPasseger.setLongitude( String.valueOf(passegerLocation.longitude) );
+        user.setLatitude( String.valueOf(passegerLocation.latitude) );
+        user.setLongitude( String.valueOf(passegerLocation.longitude) );
 
         //is not geting user name and saving
         request.setPassenger( user );
@@ -334,8 +327,6 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
 
         auth = FirebaseConfiguration.getFirebaseAuth();
         databaseReference = FirebaseConfiguration.getFirebaseDatabase();
-        userPasseger =  UserFirebase.getUserDataLogged();
-
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.passenger_map);
@@ -343,14 +334,4 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         mapFragment.getMapAsync(this);
 
     }
-
-
-    /*
-    @Override
-   public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_passenger);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }*/
-
 }

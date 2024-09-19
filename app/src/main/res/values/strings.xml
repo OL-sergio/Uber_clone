@@ -39,4 +39,8 @@
     <string name="aguardando_pedidos">Aguardando pedidos…</string>
     <string name="_0km_aproximadamente">0km - aproximadamente</string>
     <string name="nome_do_passageiro">Nome do passageiro</string>
+
+
+    <string name="aceitar_viagem">Aceitar viagem</string>
+    <string name="a_caminho_do_destino">A caminho do destino</string>
 </resources>

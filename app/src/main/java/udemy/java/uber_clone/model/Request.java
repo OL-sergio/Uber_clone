@@ -1,7 +1,8 @@
 package udemy.java.uber_clone.model;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.firestore.auth.User;
+import java.util.HashMap;
+import java.util.Map;
 
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 
@@ -32,6 +33,20 @@ public class Request {
         requests.child(getId()).setValue(this);
 
     }
+
+    public void updateStatus() {
+        DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
+        DatabaseReference requests = databaseReference.child("requests");
+        DatabaseReference requestsID = requests.child(getId());
+
+        Map object = new HashMap();
+        object.put("driver", getDriver());
+        object.put("status", getStatus());
+        requestsID.updateChildren( object );
+
+    }
+
+
 
     public String getId() {
         return id;
@@ -72,6 +87,5 @@ public class Request {
     public void setDestination(Destination destination) {
         this.destination = destination;
     }
-
 
 }

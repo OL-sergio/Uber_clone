@@ -2,9 +2,11 @@ package udemy.java.uber_clone.model;
 
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.Serializable;
+
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 
-public class Users {
+public class Users implements Serializable {
     private String id;
     private String name;
     private String email;
