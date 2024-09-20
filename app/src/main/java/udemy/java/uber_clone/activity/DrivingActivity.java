@@ -6,6 +6,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,33 +21,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
+import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.databinding.ActivityDrivingBinding;
-
-import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.model.Request;
 import udemy.java.uber_clone.model.Users;
 
@@ -51,15 +44,20 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
 
     private GoogleMap mMap;
     private LatLng driverLocation;
+    private LatLng passengerLocation;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private Marker driverMarker;
+    private Marker passengerMarker;
 
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
 
     private Users driver;
+    private Users passenger;
     private String idRequest;
     private Request requests;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,11 +104,20 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
               requests = snapshot.getValue(Request.class);
+
+                assert requests != null;
+                passenger = requests.getPassenger();
+                passengerLocation = new LatLng(
+                        Double.parseDouble(passenger.getLatitude()),
+                        Double.parseDouble(passenger.getLongitude())
+                );
+
               if( requests.getStatus() == Request.STATUS_ON_MY_AWAY ){
-                  requestwaiting();
-              }
-              if ( requests.getStatus() == Request.STATUS_START ){
                   requestStart();
+
+              }
+              if ( requests.getStatus() == Request.STATUS_WAITING ){
+                  requestWaiting();
               }
 
 
@@ -127,9 +134,60 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void requestStart() {
         buttonAcceptTrip.setText(R.string.a_caminho_do_destino);
+        
+        addMarcarDriverLocation(driverLocation, driver.getName());
+        
+        addMarcarPassengerLocation(passengerLocation, passenger.getName());
+
+        centralizePassengerAndDriverLocation(driverMarker, passengerMarker);
     }
 
-    private void requestwaiting() {
+    private void centralizePassengerAndDriverLocation(Marker driverMarker, Marker passengerMarker) {
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(driverMarker.getPosition());
+        builder.include(passengerMarker.getPosition());
+
+        LatLngBounds bounds = builder.build();
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.20);
+
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+       mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+
+    }
+
+    private void addMarcarPassengerLocation(LatLng location, String title) {
+        if (passengerMarker != null) {
+            passengerMarker.remove();
+        }
+
+        passengerMarker = mMap.addMarker(new MarkerOptions()
+                .position(location)
+                .title(title)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.usuario))
+        );
+
+    }
+
+    private void addMarcarDriverLocation(LatLng location, String title) {
+
+        if (driverMarker != null) {
+            driverMarker.remove();
+        }
+
+       driverMarker = mMap.addMarker(new MarkerOptions()
+                .position(location)
+                .title(title)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.carro))
+        );
+
+
+    }
+
+    private void requestWaiting() {
         buttonAcceptTrip.setText(R.string.aceitar_viagem);
 
 
@@ -163,6 +221,7 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
                 double longitude = location.getLongitude();
                 driverLocation = new LatLng(latitude, longitude);
 
+                mMap.clear();
                 mMap.addMarker(new MarkerOptions()
                         .position(driverLocation)
                         .title("My location")
