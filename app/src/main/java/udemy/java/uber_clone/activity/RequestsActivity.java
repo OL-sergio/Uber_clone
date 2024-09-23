@@ -75,6 +75,45 @@ public class RequestsActivity extends AppCompatActivity {
         recoverUserLocation();
     }
 
+    private void verifyStatusRequest() {
+        Users userLogged = UserFirebase.getUserDataLogged();
+        DatabaseReference requestReference = databaseReference.child("requests");
+        Query requestSearch = requestReference.orderByChild("driver/id")
+                .equalTo(userLogged.getId());
+
+        requestSearch.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Request request = data.getValue(Request.class);
+
+                    assert request != null;
+                    if (request.getStatus().equals(Request.STATUS_ON_MY_AWAY)
+                            || request.getStatus().equals(Request.STATUS_START_TRIP)
+                    ) {
+
+                        changeActivity( request, driver, true);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void changeActivity(Request idRequest, Users driver, Boolean requestAccepted) {
+
+        Intent intent = new Intent(RequestsActivity.this, DrivingActivity.class);
+        intent.putExtra("idRequest", idRequest.getId());
+        intent.putExtra("driver", driver);
+        intent.putExtra("requestAccepted", requestAccepted);
+        startActivity(intent);
+
+    }
+
     private void retriveRequests() {
         DatabaseReference requestsReference = databaseReference.child("requests");
         Query requestSearch = requestsReference.orderByChild("status").equalTo(Request.STATUS_WAITING);
@@ -192,11 +231,7 @@ public class RequestsActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, int position) {
                         Request request = requestsList.get(position);
-                        Intent intent = new Intent(RequestsActivity.this, DrivingActivity.class);
-                        intent.putExtra("idRequest", request.getId());
-                        intent.putExtra("driver",  driver);
-                        startActivity(intent);
-
+                        changeActivity(request, driver, false );
                     }
 
                     @Override
@@ -205,7 +240,12 @@ public class RequestsActivity extends AppCompatActivity {
                     }
                 }
             )
-
         );
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        verifyStatusRequest();
     }
 }

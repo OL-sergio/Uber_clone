@@ -16,7 +16,7 @@ public class Request {
 
     public static final String STATUS_WAITING = "WAITING";
     public static final String STATUS_ON_MY_AWAY = "ONMYWAY";
-    public static final String STATUS_START = "START";
+    public static final String STATUS_START_TRIP = "START_TRIP";
     public static final String STATUS_FINALISED = "FINALISED";
 
     public Request() {

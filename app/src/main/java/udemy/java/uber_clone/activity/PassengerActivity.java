@@ -64,7 +64,6 @@ import udemy.java.uber_clone.model.Users;
 
 public class PassengerActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private AppBarConfiguration appBarConfiguration;
     private ActivityPassengerBinding binding;
 
     private LinearLayout linearLayoutDestination;
@@ -225,8 +224,6 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         Users user = UserFirebase.getUserDataLogged();
         user.setLatitude( String.valueOf(passegerLocation.latitude) );
         user.setLongitude( String.valueOf(passegerLocation.longitude) );
-
-        //is not geting user name and saving
         request.setPassenger( user );
         request.setStatus( Request.STATUS_WAITING );
         request.saveRequest();
@@ -318,6 +315,7 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         if (actionBar != null) {
             actionBar.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.limedSprude_100));
             actionBar.setTitle(R.string.iniciar_uma_viagem);
+            //actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         linearLayoutDestination = binding.linearLayoutDestination;

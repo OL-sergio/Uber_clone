@@ -1,6 +1,7 @@
 package udemy.java.uber_clone.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -8,6 +9,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -56,8 +58,9 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
     private Users driver;
     private Users passenger;
     private String idRequest;
-    private Request requests;
-
+    private Request retriveRequest;
+    private String statusRequest;
+    private boolean requestAccepted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +80,12 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
             if (extras != null) {
                 driver = (Users) extras.getSerializable("driver");
                 idRequest = extras.getString("idRequest");
-                verifyStatusRequest(driver, idRequest);
+                driverLocation = new LatLng(
+                        Double.parseDouble(driver.getLatitude()),
+                        Double.parseDouble(driver.getLongitude())
+                );
+                requestAccepted = extras.getBoolean("requestAccepted");
+                verifyStatusRequest();
                 
             }
         }
@@ -97,29 +105,23 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
-    private void verifyStatusRequest(Users driver, String idRequest) {
+    private void verifyStatusRequest() {
         DatabaseReference requestsRef = databaseReference.child("requests")
                 .child(idRequest);
         requestsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-              requests = snapshot.getValue(Request.class);
 
-                assert requests != null;
-                passenger = requests.getPassenger();
-                passengerLocation = new LatLng(
-                        Double.parseDouble(passenger.getLatitude()),
-                        Double.parseDouble(passenger.getLongitude())
-                );
-
-              if( requests.getStatus() == Request.STATUS_ON_MY_AWAY ){
-                  requestStart();
-
-              }
-              if ( requests.getStatus() == Request.STATUS_WAITING ){
-                  requestWaiting();
-              }
-
+                retriveRequest = snapshot.getValue(Request.class);
+                if (retriveRequest != null) {
+                    passenger = retriveRequest.getPassenger();
+                    passengerLocation = new LatLng(
+                            Double.parseDouble(passenger.getLatitude()),
+                            Double.parseDouble(passenger.getLongitude())
+                    );
+                    statusRequest = retriveRequest.getStatus();
+                    changeInterfaceStatusRequest(statusRequest);
+                }
 
             }
 
@@ -128,18 +130,29 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
 
             }
         });
+    }
 
+private void changeInterfaceStatusRequest(String request) {
+        if (request.equals(Request.STATUS_WAITING)) {
+            requestWaiting();
+        } else if (request.equals(Request.STATUS_ON_MY_AWAY)) {
+            requestStart();
+        }
+    }
 
+    private void requestWaiting() {
+
+        buttonAcceptTrip.setText(R.string.aceitar_viagem);
     }
 
     private void requestStart() {
-        buttonAcceptTrip.setText(R.string.a_caminho_do_destino);
-        
         addMarcarDriverLocation(driverLocation, driver.getName());
-        
+
         addMarcarPassengerLocation(passengerLocation, passenger.getName());
 
         centralizePassengerAndDriverLocation(driverMarker, passengerMarker);
+
+        buttonAcceptTrip.setText(R.string.a_caminho_do_destino);
     }
 
     private void centralizePassengerAndDriverLocation(Marker driverMarker, Marker passengerMarker) {
@@ -152,10 +165,10 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.20);
+        int padding = (int) (width * 0.40);
 
         //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
-       mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
 
     }
 
@@ -183,23 +196,15 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
                 .title(title)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.carro))
         );
-
-
-    }
-
-    private void requestWaiting() {
-        buttonAcceptTrip.setText(R.string.aceitar_viagem);
-
-
     }
 
     private void acceptTrip() {
 
-        requests = new Request();
-        requests.setId(idRequest);
-        requests.setDriver(driver);
-        requests.setStatus(Request.STATUS_ON_MY_AWAY);
-        requests.updateStatus();
+        retriveRequest = new Request();
+        retriveRequest.setId(idRequest);
+        retriveRequest.setDriver(driver);
+        retriveRequest.setStatus(Request.STATUS_ON_MY_AWAY);
+        retriveRequest.updateStatus();
 
     }
 
@@ -220,15 +225,6 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 driverLocation = new LatLng(latitude, longitude);
-
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions()
-                        .position(driverLocation)
-                        .title("My location")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.carro))
-                );
-
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(driverLocation, 18));
 
             }
 
@@ -270,5 +266,16 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
 
         buttonAcceptTrip = binding.buttonAcceptTrip;
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (requestAccepted) {
+            Toast.makeText(this, "Tem de cancelar o Uber!", Toast.LENGTH_SHORT).show();
+        }else {
+            Intent intent = new Intent(this, RequestsActivity.class);
+            startActivity(intent);
+        }
+        return false;
     }
 }
