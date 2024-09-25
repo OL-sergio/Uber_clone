@@ -1,4 +1,4 @@
-package udemy.java.uber_clone.adpter;
+package udemy.java.uber_clone.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,21 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.auth.User;
-
 import java.util.List;
 
 import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.model.Request;
 import udemy.java.uber_clone.model.Users;
 
-public class RequestsAdpter extends RecyclerView.Adapter<RequestsAdpter.MyViewHolder> {
+public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyViewHolder> {
 
     private List<Request> requests;
     private final Context context;
     private final Users driver;
 
-    public RequestsAdpter(List<Request> requests, Context context, Users driver) {
+    public RequestsAdapter(List<Request> requests, Context context, Users driver) {
         this.requests = requests;
         this.context = context;
         this.driver = driver;

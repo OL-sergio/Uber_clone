@@ -57,5 +57,8 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(platform(libs.firebase.bom))
 
+    //Firebase geofire: https://firebaseopensource.com/projects/firebase/geofire-android/
+    implementation (libs.geofire.android)
+
 
 }

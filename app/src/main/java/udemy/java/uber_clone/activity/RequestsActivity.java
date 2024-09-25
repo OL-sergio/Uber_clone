@@ -7,10 +7,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,10 +20,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,14 +27,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import udemy.java.uber_clone.R;
-import udemy.java.uber_clone.adpter.RequestsAdpter;
+import udemy.java.uber_clone.adapter.RequestsAdapter;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
-import udemy.java.uber_clone.databinding.ActivityPassengerBinding;
 import udemy.java.uber_clone.databinding.ActivityRequestsBinding;
 import udemy.java.uber_clone.helpers.RecyclerItemClickListener;
 import udemy.java.uber_clone.helpers.UserFirebase;
@@ -57,7 +49,7 @@ public class RequestsActivity extends AppCompatActivity {
     private RecyclerView recyclerViewRequests;
     private TextView textViewRequests;
     private final List<Request> requestsList = new ArrayList<>();
-    private RequestsAdpter requestsAdpter;
+    private RequestsAdapter requestsAdapter;
     private Users driver;
 
     private LocationManager locationManager;
@@ -132,7 +124,7 @@ public class RequestsActivity extends AppCompatActivity {
                     Request request = data.getValue(Request.class);
                     requestsList.add(request);
                 }
-                requestsAdpter.notifyDataSetChanged();
+                requestsAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -169,11 +161,16 @@ public class RequestsActivity extends AppCompatActivity {
                 String latitude = String.valueOf(location.getLatitude());
                 String longitude = String.valueOf(location.getLongitude());
 
+                UserFirebase.updatedDataLocation(
+                        location.getLatitude(),
+                        location.getLongitude()
+                );
+
                 if (!latitude.isEmpty() && !longitude.isEmpty()) {
                     driver.setLatitude(latitude);
                     driver.setLongitude(longitude);
                     locationManager.removeUpdates(locationListener);
-                    requestsAdpter.notifyDataSetChanged();
+                    requestsAdapter.notifyDataSetChanged();
 
                 }
 
@@ -216,12 +213,12 @@ public class RequestsActivity extends AppCompatActivity {
 
         recyclerViewRequests = binding.recyclerViewPassegersRequests;
         textViewRequests = binding.textViewRequestMessenge;
-        requestsAdpter = new RequestsAdpter(requestsList, getApplicationContext(), driver);
+        requestsAdapter = new RequestsAdapter(requestsList, getApplicationContext(), driver);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerViewRequests.setLayoutManager(layoutManager);
         recyclerViewRequests.setHasFixedSize(true);
-        recyclerViewRequests.setAdapter(requestsAdpter);
+        recyclerViewRequests.setAdapter(requestsAdapter);
 
         recyclerViewRequests.addOnItemTouchListener(new RecyclerItemClickListener(
                 getApplicationContext(),

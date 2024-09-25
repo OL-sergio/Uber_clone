@@ -35,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.databinding.ActivityDrivingBinding;
+import udemy.java.uber_clone.helpers.UserFirebase;
 import udemy.java.uber_clone.model.Request;
 import udemy.java.uber_clone.model.Users;
 
@@ -143,6 +144,10 @@ private void changeInterfaceStatusRequest(String request) {
     private void requestWaiting() {
 
         buttonAcceptTrip.setText(R.string.aceitar_viagem);
+        addMarcarDriverLocation(driverLocation, driver.getName());
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(driverLocation, 18));
+
+
     }
 
     private void requestStart() {
@@ -165,7 +170,7 @@ private void changeInterfaceStatusRequest(String request) {
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.40);
+        int padding = (int) (width * 0.30);
 
         //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
@@ -225,6 +230,11 @@ private void changeInterfaceStatusRequest(String request) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 driverLocation = new LatLng(latitude, longitude);
+
+                UserFirebase.updatedDataLocation(latitude, longitude);
+
+                changeInterfaceStatusRequest(statusRequest);
+
 
             }
 

@@ -114,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
                             users.setId(userId.getUid());
                             users.saveUser();
 
-                            UserFirebase.upadteUserName(users.getName());
+                            UserFirebase.updateUserName(users.getName());
 
                             if (getUserType() == "P" ){
                                 startActivity(new Intent(RegisterActivity.this, PassengerActivity.class));

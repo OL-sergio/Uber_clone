@@ -147,8 +147,6 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         mMap = googleMap;
 
         recoverUserLocation();
-
-        // Add a marker in Sydney and move the camera
     }
 
     private void requestUber() {
@@ -212,8 +210,6 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
       }else {
          uberRequest = false;
       }
-
-
     }
 
 
@@ -261,6 +257,12 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 passegerLocation = new LatLng(latitude, longitude);
+
+                // Update Geofire
+
+                UserFirebase.updatedDataLocation(latitude, longitude);
+
+
 
                 mMap.addMarker(new MarkerOptions()
                         .position(passegerLocation)

@@ -2,9 +2,12 @@ package udemy.java.uber_clone.helpers;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -37,7 +40,7 @@ public static Users getUserDataLogged(){
         return user;
     }
 
-    public static boolean upadteUserName(String name) {
+    public static boolean updateUserName(String name) {
         try {
 
             FirebaseUser user = getUserFirebase();
@@ -97,4 +100,29 @@ public static Users getUserDataLogged(){
         return getUserFirebase().getUid();
     }
 
+    public static void updatedDataLocation(double latitude, double longitude) {
+        DatabaseReference userLocation = FirebaseConfiguration.getFirebaseDatabase()
+                .child("location_user");
+
+        GeoFire geoFire = new GeoFire(userLocation);
+
+        Users userLogged =  UserFirebase.getUserDataLogged();
+
+        geoFire.setLocation(
+                userLogged.getId()
+                ,new GeoLocation(
+                        latitude , longitude
+                ),
+                new GeoFire.CompletionListener() {
+                    @Override
+                    public void onComplete(String key, DatabaseError error) {
+                        if (error != null) {
+                            Log.d("Erro", "Erro saving location");
+                        }else {
+                            Log.d("Success", "Location saved");
+                        }
+                    }
+                }
+        );
+    }
 }
