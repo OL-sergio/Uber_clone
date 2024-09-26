@@ -29,13 +29,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.auth.User;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -44,12 +42,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.navigation.ui.AppBarConfiguration;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -93,10 +88,6 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
 
         components();
         verifyRequestStatus();
-
-      /*  NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_passenger);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);*/
 
         buttonRequestUber.setOnClickListener(v ->
                 requestUber()
@@ -267,7 +258,7 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
                 mMap.addMarker(new MarkerOptions()
                         .position(passegerLocation)
                         .title("My location")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.usuario))
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.img_usuario))
                 );
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(passegerLocation, 18));

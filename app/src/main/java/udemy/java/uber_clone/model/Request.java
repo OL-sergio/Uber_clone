@@ -34,13 +34,24 @@ public class Request {
 
     }
 
-    public void updateStatus() {
+    public void updateDriverStatus() {
         DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
         DatabaseReference requests = databaseReference.child("requests");
         DatabaseReference requestsID = requests.child(getId());
 
         Map object = new HashMap();
         object.put("driver", getDriver());
+        object.put("status", getStatus());
+        requestsID.updateChildren( object );
+
+    }
+
+    public void updateRequest() {
+        DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
+        DatabaseReference requests = databaseReference.child("requests");
+        DatabaseReference requestsID = requests.child(getId());
+
+        Map object = new HashMap();
         object.put("status", getStatus());
         requestsID.updateChildren( object );
 

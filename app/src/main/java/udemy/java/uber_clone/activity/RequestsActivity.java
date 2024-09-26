@@ -65,11 +65,43 @@ public class RequestsActivity extends AppCompatActivity {
         components();
         retriveRequests();
         recoverUserLocation();
+
+    }
+
+    private void addEventClickRecyclerView() {
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerViewRequests.setLayoutManager(layoutManager);
+        recyclerViewRequests.setHasFixedSize(true);
+        recyclerViewRequests.setAdapter(requestsAdapter);
+
+        recyclerViewRequests.addOnItemTouchListener(new RecyclerItemClickListener(
+                        getApplicationContext(),
+                        recyclerViewRequests,
+                        new RecyclerItemClickListener.OnItemClickListener() {
+
+                            @Override
+                            public void onItemClick(View view, int position) {
+
+                                Request request = requestsList.get(position);
+                                changeActivity(request.getId(), driver, false );
+
+                            }
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+
+                            }
+                        }
+                )
+        );
     }
 
     private void verifyStatusRequest() {
+
         Users userLogged = UserFirebase.getUserDataLogged();
         DatabaseReference requestReference = databaseReference.child("requests");
+
         Query requestSearch = requestReference.orderByChild("driver/id")
                 .equalTo(userLogged.getId());
 
@@ -83,8 +115,8 @@ public class RequestsActivity extends AppCompatActivity {
                     if (request.getStatus().equals(Request.STATUS_ON_MY_AWAY)
                             || request.getStatus().equals(Request.STATUS_START_TRIP)
                     ) {
-
-                        changeActivity( request, driver, true);
+                        driver = request.getDriver();
+                        changeActivity( request.getId(), driver, true);
                     }
                 }
             }
@@ -96,10 +128,10 @@ public class RequestsActivity extends AppCompatActivity {
         });
     }
 
-    private void changeActivity(Request idRequest, Users driver, Boolean requestAccepted) {
+    private void changeActivity(String idRequest, Users driver, Boolean requestAccepted) {
 
         Intent intent = new Intent(RequestsActivity.this, DrivingActivity.class);
-        intent.putExtra("idRequest", idRequest.getId());
+        intent.putExtra("idRequest", idRequest);
         intent.putExtra("driver", driver);
         intent.putExtra("requestAccepted", requestAccepted);
         startActivity(intent);
@@ -107,22 +139,33 @@ public class RequestsActivity extends AppCompatActivity {
     }
 
     private void retriveRequests() {
+
         DatabaseReference requestsReference = databaseReference.child("requests");
         Query requestSearch = requestsReference.orderByChild("status").equalTo(Request.STATUS_WAITING);
+
         requestSearch.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 if (snapshot.getChildrenCount() > 0) {
+
                     textViewRequests.setVisibility(View.GONE);
                     recyclerViewRequests.setVisibility(View.VISIBLE);
+
                 } else {
+
                     textViewRequests.setVisibility(View.VISIBLE);
                     recyclerViewRequests.setVisibility(View.GONE);
+
                 }
+
                 requestsList.clear();
+
                 for (DataSnapshot data : snapshot.getChildren()) {
+
                     Request request = data.getValue(Request.class);
                     requestsList.add(request);
+
                 }
                 requestsAdapter.notifyDataSetChanged();
             }
@@ -158,6 +201,7 @@ public class RequestsActivity extends AppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
+
                 String latitude = String.valueOf(location.getLatitude());
                 String longitude = String.valueOf(location.getLongitude());
 
@@ -167,8 +211,11 @@ public class RequestsActivity extends AppCompatActivity {
                 );
 
                 if (!latitude.isEmpty() && !longitude.isEmpty()) {
+
                     driver.setLatitude(latitude);
                     driver.setLongitude(longitude);
+
+                    addEventClickRecyclerView();
                     locationManager.removeUpdates(locationListener);
                     requestsAdapter.notifyDataSetChanged();
 
@@ -215,29 +262,6 @@ public class RequestsActivity extends AppCompatActivity {
         textViewRequests = binding.textViewRequestMessenge;
         requestsAdapter = new RequestsAdapter(requestsList, getApplicationContext(), driver);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerViewRequests.setLayoutManager(layoutManager);
-        recyclerViewRequests.setHasFixedSize(true);
-        recyclerViewRequests.setAdapter(requestsAdapter);
-
-        recyclerViewRequests.addOnItemTouchListener(new RecyclerItemClickListener(
-                getApplicationContext(),
-                recyclerViewRequests,
-                new RecyclerItemClickListener.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        Request request = requestsList.get(position);
-                        changeActivity(request, driver, false );
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-
-                    }
-                }
-            )
-        );
     }
 
     @Override
