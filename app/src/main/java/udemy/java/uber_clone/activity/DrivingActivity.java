@@ -86,7 +86,7 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
      *  inicial: -23.563196, -46.650607
      *  intermediaria: -23.564801, -46.652196
      *  final: -23.562801, -46.654660 (esse local foi corrigido com relação ao vídeo)
-     *Avenida Paulista, 2064 Rua Augusta, 1611 Rua Luis Coelho, 91, Av. Paulista, 2064 - Cerqueira César, São Paulo - SP, 01310-928, Brasil
+     *  Rua Augusta, 1611, São Paulo, 01310-928, Brasil
      **/
 
 
@@ -194,7 +194,35 @@ private void changeInterfaceStatusRequest(String request) {
             case Request.STATUS_START_TRIP:
                 requestStratTrip();
                 break;
+            case Request.STATUS_FINALISED:
+                requestFinalizedTrip();
+                break;
         }
+    }
+
+    private void requestFinalizedTrip() {
+
+        fabRoute.setVisibility(View.GONE);
+
+        if (driverMarker != null) {
+            driverMarker.remove();
+        }
+
+        if (destinationMarker != null) {
+            destinationMarker.remove();
+        }
+
+        LatLng locationDestination = new LatLng(
+                Double.parseDouble(destination.getLatitude()),
+                Double.parseDouble(destination.getLongitude())
+        );
+
+        addMarcarDestino(locationDestination, "Destino"  + destination.getRoad() );
+
+        centralizeMarcar(locationDestination);
+
+        buttonAcceptTrip.setText("Viagem finalizada"+ " R$ 20 " );
+
     }
 
     private void requestWaiting() {
@@ -203,7 +231,7 @@ private void changeInterfaceStatusRequest(String request) {
 
         addMarcarDriverLocation(driverLocation, driver.getName());
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(driverLocation, 18));
+        centralizeMarcar(driverLocation);
 
     }
 
@@ -241,6 +269,12 @@ private void changeInterfaceStatusRequest(String request) {
 
     }
 
+    private void centralizeMarcar(LatLng location) {
+        mMap.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(location, 18)
+        );
+    }
+
 
     private void startMonitoringDriving( Users uPassenger, Users uDriver ) {
 
@@ -251,7 +285,7 @@ private void changeInterfaceStatusRequest(String request) {
         Circle passengerCircle = mMap.addCircle(
                 new CircleOptions()
                         .center(passengerLocation)
-                        .radius(50)// meters
+                        .radius(20)// meters
                         .fillColor( Color.argb(90, 255, 153, 0) )
                         .strokeColor( Color.argb(190, 255, 153, 0) )
 
@@ -261,7 +295,7 @@ private void changeInterfaceStatusRequest(String request) {
                 new GeoLocation(
                         passengerLocation.latitude,
                         passengerLocation.longitude
-                ), 0.05 // 50 meters
+                ), 0.020 //  meters
         );
 
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {

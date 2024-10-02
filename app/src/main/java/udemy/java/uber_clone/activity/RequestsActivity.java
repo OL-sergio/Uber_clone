@@ -70,10 +70,7 @@ public class RequestsActivity extends AppCompatActivity {
 
     private void addEventClickRecyclerView() {
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerViewRequests.setLayoutManager(layoutManager);
-        recyclerViewRequests.setHasFixedSize(true);
-        recyclerViewRequests.setAdapter(requestsAdapter);
+
 
         recyclerViewRequests.addOnItemTouchListener(new RecyclerItemClickListener(
                         getApplicationContext(),
@@ -114,6 +111,7 @@ public class RequestsActivity extends AppCompatActivity {
                     assert request != null;
                     if (request.getStatus().equals(Request.STATUS_ON_MY_AWAY)
                             || request.getStatus().equals(Request.STATUS_START_TRIP)
+                            || request.getStatus().equals(Request.STATUS_FINALISED)
                     ) {
                         driver = request.getDriver();
                         changeActivity( request.getId(), driver, true);
@@ -260,7 +258,13 @@ public class RequestsActivity extends AppCompatActivity {
 
         recyclerViewRequests = binding.recyclerViewPassegersRequests;
         textViewRequests = binding.textViewRequestMessenge;
+
         requestsAdapter = new RequestsAdapter(requestsList, getApplicationContext(), driver);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+
+        recyclerViewRequests.setLayoutManager(layoutManager);
+        recyclerViewRequests.setHasFixedSize(true);
+        recyclerViewRequests.setAdapter(requestsAdapter);
 
     }
 
