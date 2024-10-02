@@ -10,9 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
 import udemy.java.uber_clone.R;
+import udemy.java.uber_clone.helpers.Locations;
 import udemy.java.uber_clone.model.Request;
 import udemy.java.uber_clone.model.Users;
 
@@ -54,7 +57,29 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
 
         Log.d("DEBUG", "onBindViewHolder: " + "name: " +passenger.getName() + "Name: "+ request.getPassenger().getName());
         holder.name.setText(passenger.getName());
-        holder.distance.setText("1.5 km - distancia aproximada");
+
+        if (driver != null) {
+            // Calculate the distance between two points
+            LatLng driverLocation = new LatLng(
+                    Double.parseDouble(driver.getLatitude()),
+                    Double.parseDouble(driver.getLongitude())
+            );
+
+            LatLng driverPasseger= new LatLng(
+                    Double.parseDouble(passenger.getLatitude()),
+                    Double.parseDouble(passenger.getLongitude())
+            );
+
+            float distance = Locations.calculateDistance(driverLocation, driverPasseger);
+            String distanceFormat = Locations.formatDistance(distance);
+
+            holder.distance.setText(  distanceFormat +"km - distancia aproximada");
+
+
+
+        }
+
+
 
     }
 

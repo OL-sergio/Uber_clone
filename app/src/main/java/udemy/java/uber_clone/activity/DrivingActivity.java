@@ -19,7 +19,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.net.UriCompat;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -43,9 +42,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+
 import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.databinding.ActivityDrivingBinding;
+import udemy.java.uber_clone.helpers.Locations;
 import udemy.java.uber_clone.helpers.UserFirebase;
 import udemy.java.uber_clone.model.Destination;
 import udemy.java.uber_clone.model.Request;
@@ -203,6 +205,7 @@ private void changeInterfaceStatusRequest(String request) {
     private void requestFinalizedTrip() {
 
         fabRoute.setVisibility(View.GONE);
+        requestAccepted = false;
 
         if (driverMarker != null) {
             driverMarker.remove();
@@ -221,7 +224,12 @@ private void changeInterfaceStatusRequest(String request) {
 
         centralizeMarcar(locationDestination);
 
-        buttonAcceptTrip.setText("Viagem finalizada"+ " R$ 20 " );
+        float distance = Locations.calculateDistance(passengerLocation, locationDestination);
+        float price = distance * 8;
+        DecimalFormat decimal = new DecimalFormat("0.00");
+        String result = decimal.format(price);
+
+        buttonAcceptTrip.setText("Fim da viagem - €" + result  );
 
     }
 
@@ -422,7 +430,7 @@ private void changeInterfaceStatusRequest(String request) {
 
         locationListener = new LocationListener() {
             @Override
-            public void onLocationChanged(@NonNull Location location) {
+            public void onLocationChanged(@NonNull android.location.Location location) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 driverLocation = new LatLng(latitude, longitude);

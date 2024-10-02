@@ -229,8 +229,8 @@ public class RequestsActivity extends AppCompatActivity {
         };
 
         if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+                this, Manifest.permission.ACCESS_FINE_LOCATION  )
+                == PackageManager.PERMISSION_GRANTED
         ) {
 
             locationManager.requestLocationUpdates(
