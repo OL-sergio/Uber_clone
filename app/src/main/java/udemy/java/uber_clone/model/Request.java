@@ -18,6 +18,9 @@ public class Request {
     public static final String STATUS_ON_MY_AWAY = "ONMYWAY";
     public static final String STATUS_START_TRIP = "START_TRIP";
     public static final String STATUS_FINALISED = "FINALISED";
+    public static final String STATUS_CLOSED = "CLOSED";
+    public static final String STATUS_CANCEL = "CANCEL";
+
 
     public Request() {
     }
@@ -42,9 +45,27 @@ public class Request {
         Map object = new HashMap();
         object.put("driver", getDriver());
         object.put("status", getStatus());
+
         requestsID.updateChildren( object );
 
     }
+
+    public void upadateDriverLocation() {
+        DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
+        DatabaseReference requests = databaseReference
+                .child("requests");
+
+        DatabaseReference requestsID = requests.child(getId())
+                            .child("driver");
+
+        Map object = new HashMap();
+        object.put( "latitude", getDriver().getLatitude() );
+        object.put( "longitude", getDriver().getLongitude() );
+
+        requestsID.updateChildren( object );
+
+    }
+
 
     public void updateRequest() {
         DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
@@ -53,6 +74,7 @@ public class Request {
 
         Map object = new HashMap();
         object.put("status", getStatus());
+
         requestsID.updateChildren( object );
 
     }
