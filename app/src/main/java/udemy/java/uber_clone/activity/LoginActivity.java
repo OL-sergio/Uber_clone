@@ -23,7 +23,7 @@ import java.util.Objects;
 import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.databinding.ActivityLoginBinding;
-import udemy.java.uber_clone.helpers.UserFirebase;
+import udemy.java.uber_clone.config.UserFirebase;
 import udemy.java.uber_clone.model.Users;
 
 public class LoginActivity extends AppCompatActivity {

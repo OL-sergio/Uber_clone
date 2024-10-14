@@ -1,4 +1,4 @@
-package udemy.java.uber_clone.helpers;
+package udemy.java.uber_clone.config;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,11 +15,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.auth.User;
 
 import udemy.java.uber_clone.activity.PassengerActivity;
 import udemy.java.uber_clone.activity.RequestsActivity;
-import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.model.Users;
 
 public class UserFirebase {

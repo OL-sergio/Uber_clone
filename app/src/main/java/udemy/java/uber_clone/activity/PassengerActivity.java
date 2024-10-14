@@ -2,8 +2,6 @@ package udemy.java.uber_clone.activity;
 
 import static android.content.DialogInterface.OnClickListener;
 
-import static udemy.java.uber_clone.R.string.*;
-
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,7 +55,8 @@ import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.databinding.ActivityPassengerBinding;
 import udemy.java.uber_clone.helpers.Locations;
-import udemy.java.uber_clone.helpers.UserFirebase;
+import udemy.java.uber_clone.config.UserFirebase;
+import udemy.java.uber_clone.helpers.UsersMarkers;
 import udemy.java.uber_clone.model.Destination;
 import udemy.java.uber_clone.model.Request;
 import udemy.java.uber_clone.model.Users;
@@ -79,6 +78,7 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
     private Marker driverMarker;
     private Marker passengerMarker;
     private Marker destinationMarker;
+    private UsersMarkers usersMarkers;
 
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
@@ -186,8 +186,10 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
                     break;
             }
         }else {
-            addMarcarPassengerLocation(passengerLocation, "A sua localização");
-            centralizeMarcar(passengerLocation);
+
+            usersMarkers.addMarcarPassengerLocation( passengerLocation, "A sua localização" );
+            usersMarkers.centralizeMarKer(passengerLocation);
+
             Log.e("changeInterfaceStatusRequest", " Status request is empty! " );
         }
     }
@@ -199,9 +201,11 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         buttonRequestUber.setText(R.string.cancelar_uber);
         uberCancel = true;
 
-        addMarcarPassengerLocation(passengerLocation, passenger.getName());
+        usersMarkers.addMarcarPassengerLocation( passengerLocation, passenger.getName() );
 
-        centralizeMarcar(passengerLocation);
+        usersMarkers.centralizeMarKer(passengerLocation);
+
+
 
     }
 
@@ -210,7 +214,8 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         buttonRequestUber.setText(R.string.motorista_a_caminho);
         buttonRequestUber.setEnabled(false);
 
-        addMarcarPassengerLocation( passengerLocation, passenger.getName() );
+
+        usersMarkers.addMarcarPassengerLocation( passengerLocation, passenger.getName() );
 
         addMarcarDriverLocation( driverLocation, driver.getName() );
 
@@ -249,7 +254,8 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         );
         Destination destinationRoad = new Destination();
         addMarcarDestino( locationDestination, "Destino: " + destinationRoad.getRoad() );
-        centralizeMarcar( locationDestination );
+        usersMarkers.centralizeMarKer(locationDestination);
+
 
         float distance = Locations.calculateDistance(passengerLocation, locationDestination);
         float price = distance * 8;
@@ -287,9 +293,8 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         buttonRequestUber.setText(R.string.chamar_uber);
         uberCancel = false;
 
-        addMarcarPassengerLocation( passengerLocation, passenger.getName() );
-
-        centralizeMarcar(passengerLocation);
+        usersMarkers.addMarcarPassengerLocation(passengerLocation, passenger.getName());
+        usersMarkers.centralizeMarKer(passengerLocation);
 
     }
 
@@ -323,19 +328,6 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         );
     }
 
-    private void addMarcarPassengerLocation(LatLng location, String title) {
-
-        if (passengerMarker != null) {
-            passengerMarker.remove();
-        }
-
-        passengerMarker = mMap.addMarker(new MarkerOptions()
-                .position(location)
-                .title(title)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.img_usuario))
-        );
-    }
-
     private void addMarcarDestino(LatLng location, String title) {
 
         if (passengerMarker != null) {
@@ -354,17 +346,12 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
-    private void centralizeMarcar(LatLng location) {
-        mMap.moveCamera(
-                CameraUpdateFactory.newLatLngZoom(location, 18)
-        );
-    }
-
-
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        usersMarkers = new UsersMarkers(mMap);
 
         recoverUserLocation();
     }

@@ -35,7 +35,7 @@ import udemy.java.uber_clone.adapter.RequestsAdapter;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.databinding.ActivityRequestsBinding;
 import udemy.java.uber_clone.helpers.RecyclerItemClickListener;
-import udemy.java.uber_clone.helpers.UserFirebase;
+import udemy.java.uber_clone.config.UserFirebase;
 import udemy.java.uber_clone.model.Request;
 import udemy.java.uber_clone.model.Users;
 

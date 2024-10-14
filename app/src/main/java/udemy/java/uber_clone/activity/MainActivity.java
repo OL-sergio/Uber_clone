@@ -10,16 +10,14 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
-import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.databinding.ActivityMainBinding;
 import udemy.java.uber_clone.helpers.Permissions;
-import udemy.java.uber_clone.helpers.UserFirebase;
+import udemy.java.uber_clone.config.UserFirebase;
 
 public class MainActivity extends AppCompatActivity {
 
