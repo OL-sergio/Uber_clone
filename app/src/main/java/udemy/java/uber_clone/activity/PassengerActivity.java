@@ -28,15 +28,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -75,9 +70,6 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
     private LatLng passengerLocation;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private Marker driverMarker;
-    private Marker passengerMarker;
-    private Marker destinationMarker;
     private UsersMarkers usersMarkers;
 
     private FirebaseAuth auth;
@@ -88,7 +80,7 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
     private Users passenger;
     private Users driver;
     private String statusRequest;
-    
+
     private boolean uberCancel = false;
 
 
@@ -114,23 +106,23 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
 
         DatabaseReference requestReferece = databaseReference.child("requests");
         Query requestQuery = requestReferece.orderByChild("passenger/id")
-                .equalTo( userPasseger.getId() );
+                .equalTo(userPasseger.getId());
 
         requestQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("onDataChangeData", "onDataChange: " + snapshot.toString());
+                Log.d("onDataChangeData", "onDataChange: " + snapshot);
                 List<Request> requestList = new ArrayList<>();
-                for (DataSnapshot ds: snapshot.getChildren()) {
-                    requestList.add( ds.getValue(Request.class) );
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    requestList.add(ds.getValue(Request.class));
                 }
 
-                Collections.reverse( requestList );
-                if ( requestList != null && requestList.size() > 0 ){
+                Collections.reverse(requestList);
+                if (requestList != null && requestList.size() > 0) {
 
                     retriveRequest = requestList.get(0);
                     if (retriveRequest != null) {
-                        if ( !retriveRequest.getStatus().equals(Request.STATUS_CLOSED ) ) {
+                        if (!retriveRequest.getStatus().equals(Request.STATUS_CLOSED)) {
 
                             passenger = retriveRequest.getPassenger();
                             passengerLocation = new LatLng(
@@ -185,15 +177,13 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
                     requestCanceled();
                     break;
             }
-        }else {
+        } else {
 
-            usersMarkers.addMarcarPassengerLocation( passengerLocation, "A sua localização" );
+            usersMarkers.addMarcarPassengerLocation(passengerLocation, "A sua localização");
             usersMarkers.centralizeMarKer(passengerLocation);
 
-            Log.e("changeInterfaceStatusRequest", " Status request is empty! " );
         }
     }
-
 
 
     private void requestWaiting() {
@@ -201,25 +191,24 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         buttonRequestUber.setText(R.string.cancelar_uber);
         uberCancel = true;
 
-        usersMarkers.addMarcarPassengerLocation( passengerLocation, passenger.getName() );
+        usersMarkers.addMarcarPassengerLocation(passengerLocation, passenger.getName());
 
         usersMarkers.centralizeMarKer(passengerLocation);
-
-
 
     }
 
     private void requestStart() {
+
         linearLayoutDestination.setVisibility(View.GONE);
         buttonRequestUber.setText(R.string.motorista_a_caminho);
         buttonRequestUber.setEnabled(false);
 
 
-        usersMarkers.addMarcarPassengerLocation( passengerLocation, passenger.getName() );
+        usersMarkers.addMarcarPassengerLocation(passengerLocation, passenger.getName());
 
-        addMarcarDriverLocation( driverLocation, driver.getName() );
+        usersMarkers.addMarcarDriverLocation(driverLocation, driver.getName());
 
-        centralizePassengerAndDriverLocation( driverMarker, passengerMarker );
+        usersMarkers.centralizePassengerAndDriverLocation( this, driverLocation, passengerLocation, mMap );
 
     }
 
@@ -229,16 +218,19 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
         buttonRequestUber.setText(R.string.a_caminho_do_destino);
         buttonRequestUber.setEnabled(false);
 
-        addMarcarDriverLocation( driverLocation, driver.getName() );
+        usersMarkers.addMarcarDriverLocation(driverLocation, driver.getName());
 
         LatLng destinationLocation = new LatLng(
                 Double.parseDouble(destination.getLatitude()),
                 Double.parseDouble(destination.getLongitude())
         );
         Destination destinationRoad = new Destination();
-        addMarcarDestino( destinationLocation, "Destino: " + destinationRoad.getRoad() );
 
-        centralizePassengerAndDriverLocation( driverMarker, passengerMarker );
+        Log.d("onDataChangeData", "destinationLocation: " + destinationRoad.getRoad());
+
+        usersMarkers.addMarcarDestino(destinationLocation, "Destino: " + destinationRoad.getRoad());
+
+        usersMarkers.centralizePassengerAndDriverLocation( this, driverLocation, passengerLocation, mMap );
 
     }
 
@@ -253,7 +245,7 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
                 Double.parseDouble(destination.getLongitude())
         );
         Destination destinationRoad = new Destination();
-        addMarcarDestino( locationDestination, "Destino: " + destinationRoad.getRoad() );
+        usersMarkers.addMarcarDestino(locationDestination, "Destino: " + destinationRoad.getRoad());
         usersMarkers.centralizeMarKer(locationDestination);
 
 
@@ -272,14 +264,11 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
                 .setTitle("Total da viagem")
                 .setMessage("Total da viagem á pagar: € " + result)
                 .setCancelable(false)
-                .setNegativeButton("Encerrar viagem", new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        retriveRequest.setStatus(Request.STATUS_CLOSED);
-                        retriveRequest.updateRequest();
-                        finish();
-                        startActivity(new Intent(getIntent()));
-                    }
+                .setNegativeButton("Encerrar viagem", (dialog, which) -> {
+                    retriveRequest.setStatus(Request.STATUS_CLOSED);
+                    retriveRequest.updateRequest();
+                    finish();
+                    startActivity(new Intent(getIntent()));
                 });
 
         AlertDialog alertDialog = builder.create();
@@ -298,53 +287,6 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
-    private void centralizePassengerAndDriverLocation(Marker driverMarker, Marker passengerMarker) {
-
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        builder.include(driverMarker.getPosition());
-        builder.include(passengerMarker.getPosition());
-
-        LatLngBounds bounds = builder.build();
-
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.30);
-
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
-
-    }
-
-    private void addMarcarDriverLocation(LatLng location, String title) {
-
-        if (driverMarker != null) {
-            driverMarker.remove();
-        }
-
-        driverMarker = mMap.addMarker(new MarkerOptions()
-                .position(location)
-                .title(title)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.img_carro))
-        );
-    }
-
-    private void addMarcarDestino(LatLng location, String title) {
-
-        if (passengerMarker != null) {
-            passengerMarker.remove();
-        }
-
-        if (destinationMarker != null) {
-            destinationMarker.remove();
-        }
-
-        destinationMarker = mMap.addMarker(new MarkerOptions()
-                .position(location)
-                .title(title)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.img_destino))
-        );
-    }
-
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -360,68 +302,66 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
 
         //false -> uber cannot be canceled
         //true -> uber can be canceled
-      if ( uberCancel ){
+        if (uberCancel) {
 
-          retriveRequest.setStatus(Request.STATUS_CANCEL);
-          retriveRequest.updateRequest();
+            retriveRequest.setStatus(Request.STATUS_CANCEL);
+            retriveRequest.updateRequest();
 
+            //String originText = origin.getText().toString();
+        } else {
 
-          //String originText = origin.getText().toString();
-      }else {
+            String destinationString = destinationText.getText().toString();
 
-          String destinationString = destinationText.getText().toString();
+            if (!destinationString.equals("") && destinationString != null) {
 
-          if (!destinationString.equals("") &&  destinationString != null) {
+                Address addressDestination = recoverAddress(destinationString);
+                if (addressDestination != null) {
 
-              Address addressDestination = recoverAddress( destinationString );
-              if ( addressDestination != null ) {
+                    final Destination destination = new Destination();
+                    destination.setCity(addressDestination.getLocality());
+                    destination.setPostalCode(addressDestination.getPostalCode());
+                    destination.setNeighborhood(addressDestination.getSubLocality());
+                    destination.setRoad(addressDestination.getThoroughfare());
+                    destination.setNumber(addressDestination.getFeatureName());
+                    destination.setLatitude(String.valueOf(addressDestination.getLatitude()));
+                    destination.setLongitude(String.valueOf(addressDestination.getLongitude()));
 
-                  Destination destination = new Destination();
-                  destination.setCity( addressDestination.getLocality() );
-                  destination.setPostalCode( addressDestination.getPostalCode() );
-                  destination.setNeighborhood( addressDestination.getSubLocality() );
-                  destination.setRoad( addressDestination.getThoroughfare());
-                  destination.setNumber( addressDestination.getFeatureName());
-                  destination.setLatitude( String.valueOf( addressDestination.getLatitude() ) );
-                  destination.setLongitude( String.valueOf( addressDestination.getLongitude() ) );
+                    StringBuilder message = new StringBuilder();
+                    message.append("Cidade: ").append(destination.getCity());
+                    message.append("\nRua: ").append(destination.getRoad());
+                    message.append("\nNúmero: ").append(destination.getNumber());
+                    message.append("\nBairro: ").append(destination.getNeighborhood());
+                    message.append("\nCódigo Postal: ").append(destination.getPostalCode());
 
-                  StringBuilder message = new StringBuilder();
-                  message.append("Cidade: ").append(destination.getCity());
-                  message.append("\nRua: ").append(destination.getRoad());
-                  message.append("\nNúmero: ").append(destination.getNumber());
-                  message.append("\nBairro: ").append(destination.getNeighborhood());
-                  message.append("\nCódigo Postal: ").append(destination.getPostalCode());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                            .setTitle("Confirme seu endereço")
+                            .setMessage(message)
+                            .setPositiveButton("Confirmar", new OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                  AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                          .setTitle("Confirme seu endereço")
-                          .setMessage(message)
-                          .setPositiveButton( "Confirmar",  new OnClickListener() {
-                              @Override
-                              public void onClick(DialogInterface dialog, int which) {
+                                    //save request destination
+                                    saveRequest(destination);
 
-                                  //save request destination
-                                  saveRequest(destination);
+                                }
 
-                              }
+                            }).setNegativeButton("Cancelar", new OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                          }) .setNegativeButton("Cancelar", new OnClickListener() {
-                              @Override
-                              public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
 
-                              }
-                          });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
-                  AlertDialog dialog = builder.create();
-                  dialog.show();
+                }
 
-              }
-
-          }else {
-              Toast.makeText(this, R.string.interduza_o_destino, Toast.LENGTH_SHORT).show();
-          }
-      }
+            } else {
+                Toast.makeText(this, R.string.interduza_o_destino, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
-
 
     private void saveRequest(Destination destination) {
         Request request = new Request();
@@ -492,8 +432,6 @@ public class PassengerActivity extends AppCompatActivity implements OnMapReadyCa
                                     locationListener
                             );
                         }
-
-                        Log.e("changeInterfaceStatusRequest", " Status request is empty! " );
                     }
                 }
             }
