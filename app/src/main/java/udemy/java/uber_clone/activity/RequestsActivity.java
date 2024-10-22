@@ -128,7 +128,7 @@ public class RequestsActivity extends AppCompatActivity {
 
     private void changeActivity(String idRequest, Users driver, Boolean requestAccepted) {
 
-        Intent intent = new Intent(RequestsActivity.this, DrivingActivity.class);
+        Intent intent = new Intent(RequestsActivity.this, DriverActivity.class);
         intent.putExtra("idRequest", idRequest);
         intent.putExtra("driver", driver);
         intent.putExtra("requestAccepted", requestAccepted);

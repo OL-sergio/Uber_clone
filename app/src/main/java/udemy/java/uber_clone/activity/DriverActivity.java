@@ -23,17 +23,12 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,16 +39,17 @@ import java.text.DecimalFormat;
 
 import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
-import udemy.java.uber_clone.databinding.ActivityDrivingBinding;
+import udemy.java.uber_clone.databinding.ActivityDriverBinding;
 import udemy.java.uber_clone.helpers.Locations;
 import udemy.java.uber_clone.config.UserFirebase;
+import udemy.java.uber_clone.helpers.UsersMarkers;
 import udemy.java.uber_clone.model.Destination;
 import udemy.java.uber_clone.model.Request;
 import udemy.java.uber_clone.model.Users;
 
-public class DrivingActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class DriverActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private ActivityDrivingBinding binding;
+    private ActivityDriverBinding binding;
 
     private Button buttonAcceptTrip;
     private FloatingActionButton fabRoute;
@@ -63,9 +59,6 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
     private LatLng passengerLocation;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private Marker driverMarker;
-    private Marker passengerMarker;
-    private Marker destinationMarker;
 
     private DatabaseReference databaseReference;
 
@@ -76,6 +69,7 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
     private Request retriveRequest;
     private String statusRequest;
     private boolean requestAccepted;
+    private UsersMarkers usersMarkers;
 
     /**
      *
@@ -93,7 +87,7 @@ public class DrivingActivity extends AppCompatActivity implements OnMapReadyCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityDrivingBinding.inflate(getLayoutInflater());
+        binding = ActivityDriverBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
@@ -211,25 +205,25 @@ private void changeInterfaceStatusRequest(String request) {
 
         buttonAcceptTrip.setText(R.string.aceitar_viagem);
 
-        addMarcarDriverLocation(driverLocation, driver.getName());
+        usersMarkers.addMarkerDriverLocation(driverLocation, driver.getName());
 
-        centralizeMarcar(driverLocation);
+        usersMarkers.centralizeMarKer(driverLocation);
 
     }
 
 
     private void requestStart() {
 
-        buttonAcceptTrip.setText(R.string.a_camino_do_passageiro);
+        buttonAcceptTrip.setText(R.string.a_caminho_do_passageiro);
         fabRoute.setVisibility( FloatingActionButton.VISIBLE );
 
-        addMarcarDriverLocation(driverLocation, driver.getName());
+        usersMarkers.addMarkerDriverLocation( driverLocation, driver.getName() );
 
-        addMarcarPassengerLocation(passengerLocation, passenger.getName());
+        usersMarkers.addMarkerPassengerLocation( passengerLocation, passenger.getName() );
 
-        centralizePassengerAndDriverLocation(driverMarker, passengerMarker);
+        usersMarkers.centralizePassengerAndDriverLocation( this ,driverLocation , passengerLocation, mMap );
 
-        startMonitoringDriving(driver, passengerLocation , Request.STATUS_START_TRIP );
+        startMonitoringDriving( driver, passengerLocation , Request.STATUS_START_TRIP );
 
     }
 
@@ -238,18 +232,43 @@ private void changeInterfaceStatusRequest(String request) {
         fabRoute.setVisibility(View.VISIBLE);
         buttonAcceptTrip.setText(R.string.a_caminho_do_destino);
 
-        addMarcarDriverLocation(driverLocation, driver.getName());
+       /*
+        DatabaseReference requests = databaseReference.child("requests");
+        String idRequest = requests.getKey();
+        Log.d("firebase", idRequest);
+
+        databaseReference.child(idRequest).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+
+                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+
+
+
+                }
+            }
+        });*/
+
 
         LatLng destinationLocation = new LatLng(
                 Double.parseDouble(destination.getLatitude()),
                 Double.parseDouble(destination.getLongitude())
         );
 
-        addMarcarDestino( destinationLocation, "Destino");
+        Log.d("requestStratTrip", "requestStratTrip: " + destinationLocation);
 
-        centralizePassengerAndDriverLocation(driverMarker, destinationMarker);
+        usersMarkers.addMarkerDriverLocation(driverLocation, driver.getName());
 
-        startMonitoringDriving(driver, passengerLocation , Request.STATUS_START_TRIP );
+        usersMarkers.addMarkerDestino( destinationLocation, "Destino");
+
+        usersMarkers.centralizePassengerAndDriverLocation( this, driverLocation, destinationLocation, mMap );
+
+        startMonitoringDriving(driver, destinationLocation , Request.STATUS_START_TRIP );
 
     }
 
@@ -258,22 +277,15 @@ private void changeInterfaceStatusRequest(String request) {
         fabRoute.setVisibility(View.GONE);
         requestAccepted = false;
 
-        if (driverMarker != null) {
-            driverMarker.remove();
-        }
-
-        if (destinationMarker != null) {
-            destinationMarker.remove();
-        }
 
         LatLng locationDestination = new LatLng(
                 Double.parseDouble(destination.getLatitude()),
                 Double.parseDouble(destination.getLongitude())
         );
 
-        addMarcarDestino(locationDestination, "Destino"  + destination.getRoad() );
+        usersMarkers.addMarkerDestino(locationDestination, "Destino"  + destination.getRoad() );
 
-        centralizeMarcar(locationDestination);
+        usersMarkers.centralizeMarKer(locationDestination);
 
         float distance = Locations.calculateDistance(passengerLocation, locationDestination);
         float price = distance * 8;
@@ -292,13 +304,6 @@ private void changeInterfaceStatusRequest(String request) {
         Toast.makeText(this, "Viagem cancelada pelo passageiro!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, RequestsActivity.class);
         startActivity(intent);
-    }
-
-
-    private void centralizeMarcar(LatLng location) {
-        mMap.moveCamera(
-                CameraUpdateFactory.newLatLngZoom(location, 18)
-        );
     }
 
 
@@ -364,67 +369,6 @@ private void changeInterfaceStatusRequest(String request) {
         });
     }
 
-    private void centralizePassengerAndDriverLocation(Marker driverMarker, Marker passengerMarker) {
-
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        builder.include(driverMarker.getPosition());
-        builder.include(passengerMarker.getPosition());
-
-        LatLngBounds bounds = builder.build();
-
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.30);
-
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding));
-
-    }
-
-    private void addMarcarPassengerLocation(LatLng location, String title) {
-
-        if (passengerMarker != null) {
-            passengerMarker.remove();
-        }
-
-        passengerMarker = mMap.addMarker(new MarkerOptions()
-                .position(location)
-                .title(title)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.img_usuario))
-        );
-    }
-
-    private void addMarcarDriverLocation(LatLng location, String title) {
-
-        if (driverMarker != null) {
-            driverMarker.remove();
-        }
-
-       driverMarker = mMap.addMarker(new MarkerOptions()
-                .position(location)
-                .title(title)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.img_carro))
-        );
-    }
-
-    private void addMarcarDestino(LatLng location, String title) {
-
-        if (passengerMarker != null) {
-            passengerMarker.remove();
-        }
-
-        if (destinationMarker != null) {
-            destinationMarker.remove();
-        }
-
-        destinationMarker = mMap.addMarker(new MarkerOptions()
-                .position(location)
-                .title(title)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.img_destino))
-        );
-    }
-
-
     private void acceptTrip() {
 
         retriveRequest = new Request();
@@ -435,14 +379,6 @@ private void changeInterfaceStatusRequest(String request) {
 
     }
 
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
-        recoverUserLocation();
-    }
 
     private void recoverUserLocation() {
 
@@ -485,6 +421,16 @@ private void changeInterfaceStatusRequest(String request) {
                     locationListener
             );
         }
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        usersMarkers = new UsersMarkers(mMap);
+
+        recoverUserLocation();
     }
 
     private void compoments() {

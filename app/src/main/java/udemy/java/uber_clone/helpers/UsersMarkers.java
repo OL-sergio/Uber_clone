@@ -35,7 +35,7 @@ public class UsersMarkers {
         this.mMap = map;
     }
 
-    public void addMarcarPassengerLocation(LatLng location, String title) {
+    public void addMarkerPassengerLocation(LatLng location, String title) {
 
         if (passengerMarker != null) {
             passengerMarker.remove();
@@ -44,7 +44,7 @@ public class UsersMarkers {
 
     }
 
-    public void addMarcarDriverLocation(LatLng location, String title) {
+    public void addMarkerDriverLocation(LatLng location, String title) {
 
         if (driverMarker != null) {
             driverMarker.remove();
@@ -53,7 +53,7 @@ public class UsersMarkers {
 
     }
 
-    public void addMarcarDestino(LatLng location, String title) {
+    public void addMarkerDestino(LatLng location, String title) {
 
         if (passengerMarker != null) {
             passengerMarker.remove();
@@ -66,6 +66,7 @@ public class UsersMarkers {
         destinationMarker = centerUsersMarker(location, title, R.drawable.img_destino);
 
     }
+
 
     private Marker centerUsersMarker(LatLng location, String title, int resourceIcon) {
         userMarker =  mMap.addMarker(new MarkerOptions()

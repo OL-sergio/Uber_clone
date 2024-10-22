@@ -17,7 +17,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activity.DrivingActivity"
+            android:name=".activity.DriverActivity"
             android:exported="false"
             android:parentActivityName=".activity.RegisterActivity"
             android:theme="@style/Theme.Design.NoActionBar"
