@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_100"
+    android:fitsSystemWindows="true"
     tools:context=".activity.PassengerActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -95,6 +96,7 @@
         android:textAllCaps="true"
         android:textColor="@color/white_100"
         android:textStyle="bold"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

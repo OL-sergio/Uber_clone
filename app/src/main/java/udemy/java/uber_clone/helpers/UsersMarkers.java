@@ -24,61 +24,77 @@ import udemy.java.uber_clone.R;
 public class UsersMarkers {
 
     private final GoogleMap mMap;
-    private Marker driverMarker;
-    private Marker passengerMarker;
-    private Marker destinationMarker;
-    private Marker userMarker;
+    private Marker markerDestination;
+    private Marker markerPassenger;
+    private Marker markerDriver;
+    private Marker usersMarker;
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-    public UsersMarkers(GoogleMap map ) {
+    public UsersMarkers(GoogleMap map) {
         this.mMap = map;
     }
 
     public void addMarkerPassengerLocation(LatLng location, String title) {
 
-        if (passengerMarker != null) {
-            passengerMarker.remove();
+        if (markerPassenger != null) {
+            markerPassenger.remove();
         }
-            passengerMarker = centerUsersMarker(location, title, R.drawable.img_usuario);
+            markerPassenger = centerUsersMarker(location, title, R.drawable.img_usuario);
 
     }
 
     public void addMarkerDriverLocation(LatLng location, String title) {
 
-        if (driverMarker != null) {
-            driverMarker.remove();
+        if (markerDriver != null) {
+            markerDriver.remove();
         }
-            driverMarker = centerUsersMarker(location, title, R.drawable.img_carro);
+            markerDriver = centerUsersMarker(location, title, R.drawable.img_carro );
 
     }
 
-    public void addMarkerDestino(LatLng location, String title) {
+    public void addMarkerDestination(LatLng location, String title) {
 
-        if (passengerMarker != null) {
-            passengerMarker.remove();
+        if (markerPassenger != null) {
+            markerPassenger.remove();
         }
 
-        if (destinationMarker != null) {
-            destinationMarker.remove();
+        if (markerDestination != null) {
+            markerDestination.remove();
         }
 
-        destinationMarker = centerUsersMarker(location, title, R.drawable.img_destino);
+        markerDestination = centerUsersMarker(location, title, R.drawable.img_destino );
+
+    }
+
+
+
+    public void addMarkerFinalizedTripPassenger(LatLng location, String title) {
+
+        if (markerDriver != null) {
+            markerDriver.remove();
+        }
+
+        if (markerPassenger != null) {
+            markerPassenger.remove();
+        }
+
+        markerPassenger = centerUsersMarker(location, title, R.drawable.img_usuario );
 
     }
 
 
     private Marker centerUsersMarker(LatLng location, String title, int resourceIcon) {
-        userMarker =  mMap.addMarker(new MarkerOptions()
+        usersMarker =  mMap.addMarker(new MarkerOptions()
                 .position(location)
                 .title(title)
                 .icon(BitmapDescriptorFactory.fromResource(resourceIcon))
         );
-        return userMarker;
+        return usersMarker;
     }
 
 
-    public void centralizePassengerAndDriverLocation( Context context, LatLng driverLocation, LatLng passengerLocation, GoogleMap mMap) {
+    public void centralizeTwoMarker( LatLng locationA, LatLng locationB, GoogleMap mMap, Context context) {
 
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -89,11 +105,11 @@ public class UsersMarkers {
 
                 if ( ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED ) {
-                    if (driverLocation != null && passengerLocation != null) {
+                    if (locationA != null && locationB != null) {
 
                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                        builder.include(driverLocation);
-                        builder.include(passengerLocation);
+                        builder.include(locationA);
+                        builder.include(locationB);
                         LatLngBounds bounds = builder.build();
 
                         int width = context.getResources().getDisplayMetrics().widthPixels;

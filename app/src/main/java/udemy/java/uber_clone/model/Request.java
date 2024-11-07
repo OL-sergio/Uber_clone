@@ -1,5 +1,9 @@
 package udemy.java.uber_clone.model;
 
+import android.media.MediaPlayer;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +54,7 @@ public class Request {
 
     }
 
-    public void upadateDriverLocation() {
+    public void updateDriverLocation() {
         DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
         DatabaseReference requests = databaseReference
                 .child("requests");

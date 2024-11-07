@@ -63,7 +63,7 @@ public class RequestsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         components();
-        retriveRequests();
+        retrieveRequests();
         recoverUserLocation();
 
     }
@@ -82,7 +82,6 @@ public class RequestsActivity extends AppCompatActivity {
 
                                 Request request = requestsList.get(position);
                                 changeActivity(request.getId(), driver, false );
-
                             }
 
                             @Override
@@ -113,8 +112,10 @@ public class RequestsActivity extends AppCompatActivity {
                             || request.getStatus().equals(Request.STATUS_START_TRIP)
                             || request.getStatus().equals(Request.STATUS_FINALISED)
                     ) {
+
                         driver = request.getDriver();
                         changeActivity( request.getId(), driver, true);
+
                     }
                 }
             }
@@ -126,7 +127,7 @@ public class RequestsActivity extends AppCompatActivity {
         });
     }
 
-    private void changeActivity(String idRequest, Users driver, Boolean requestAccepted) {
+    private void changeActivity( String idRequest, Users driver, Boolean requestAccepted ) {
 
         Intent intent = new Intent(RequestsActivity.this, DriverActivity.class);
         intent.putExtra("idRequest", idRequest);
@@ -136,7 +137,7 @@ public class RequestsActivity extends AppCompatActivity {
 
     }
 
-    private void retriveRequests() {
+    private void retrieveRequests() {
 
         DatabaseReference requestsReference = databaseReference.child("requests");
         Query requestSearch = requestsReference.orderByChild("status").equalTo(Request.STATUS_WAITING);

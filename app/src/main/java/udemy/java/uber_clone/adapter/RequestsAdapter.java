@@ -21,7 +21,7 @@ import udemy.java.uber_clone.model.Users;
 
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyViewHolder> {
 
-    private List<Request> requests;
+    private final List<Request> requests;
     private final Context context;
     private final Users driver;
 
@@ -75,12 +75,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.MyView
 
             holder.distance.setText(  distanceFormat +"km - distancia aproximada");
 
-
-
         }
-
-
-
     }
 
     @Override

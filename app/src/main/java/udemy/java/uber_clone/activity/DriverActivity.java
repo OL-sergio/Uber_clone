@@ -3,7 +3,7 @@ package udemy.java.uber_clone.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -19,16 +19,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
-import com.firebase.geofire.GeoQuery;
-import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,11 +35,15 @@ import java.text.DecimalFormat;
 import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.databinding.ActivityDriverBinding;
+import udemy.java.uber_clone.helpers.Constants;
 import udemy.java.uber_clone.helpers.Locations;
 import udemy.java.uber_clone.config.UserFirebase;
+import udemy.java.uber_clone.helpers.MonitoringUsers;
+import udemy.java.uber_clone.helpers.TripSummaryDialog;
 import udemy.java.uber_clone.helpers.UsersMarkers;
 import udemy.java.uber_clone.model.Destination;
 import udemy.java.uber_clone.model.Request;
+import udemy.java.uber_clone.model.RequestActive;
 import udemy.java.uber_clone.model.Users;
 
 public class DriverActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -57,6 +56,8 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
     private GoogleMap mMap;
     private LatLng driverLocation;
     private LatLng passengerLocation;
+    private LatLng destinationLocation;
+    private LatLng destinationLocationActive;
     private LocationManager locationManager;
     private LocationListener locationListener;
 
@@ -64,17 +65,22 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private Users driver;
     private Users passenger;
+    private String passengerId;
     private Destination destination;
-    private String idRequest;
+    private RequestActive requestActive;
+    private String requestId;
     private Request retriveRequest;
     private String statusRequest;
     private boolean requestAccepted;
     private UsersMarkers usersMarkers;
+    private MonitoringUsers monitoringUsers;
+    private TripSummaryDialog tripSummaryDialog;
+
 
     /**
      *
-     * Lat/lon destino:-23.556407, -46.662365 (Av. Paulista, 2439)
-     * Lat/lon passageiro: -23.562791, -46.654668
+     * Lat/lon destino:-23.556407, -46.662365 (Av. Paulista, 2064)
+     * Lat/lon passageiro: -23.562791, -46.654668 (Av. Paulista, 2439)
      * Lat/lon Motorista (a caminho):
      *  inicial: -23.563196, -46.650607
      *  intermediaria: -23.564801, -46.652196
@@ -92,7 +98,7 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
 
         setSupportActionBar(binding.toolbar);
 
-        compoments();
+        components();
 
         if (getIntent().getExtras().containsKey("idRequest")
                 && getIntent().getExtras().containsKey("driver")
@@ -106,12 +112,10 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
                         Double.parseDouble(driver.getLongitude())
                 );
 
-
-                idRequest = extras.getString("idRequest");
+                requestId = extras.getString("idRequest");
                 requestAccepted = extras.getBoolean("requestAccepted");
 
                 verifyStatusRequest();
-                
             }
         }
 
@@ -126,15 +130,15 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
                 String lat = "";
                 String lon = "";
 
-                if ( retriveRequest.equals(Request.STATUS_ON_MY_AWAY ) ) {
+                if ( retriveRequest.equals(Constants.STATUS_ON_MY_AWAY ) ) {
 
                     lat = String.valueOf(passengerLocation.latitude);
                     lon = String.valueOf(passengerLocation.longitude);
 
-                }   else if (retriveRequest.equals(Request.STATUS_START_TRIP)) {
+                }   else if (retriveRequest.equals(Constants.STATUS_START_TRIP)) {
 
-                    lat = destination.getLatitude();
-                    lon = destination.getLongitude();
+                   lat = destination.getLatitude();
+                   lon = destination.getLongitude();
 
                 }
                 //Open Google Maps
@@ -143,15 +147,17 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.setPackage("com.google.android.apps.maps");
                 startActivity(intent);
-
             }
         });
     }
 
-    private void verifyStatusRequest() {
+    private void verifyStatusRequest( ) {
+
         DatabaseReference requestsRef = databaseReference.child("requests")
-                .child(idRequest);
+                .child(requestId);
         requestsRef.addValueEventListener(new ValueEventListener() {
+
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -164,11 +170,28 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
                             Double.parseDouble(passenger.getLongitude())
                     );
 
-                    statusRequest = retriveRequest.getStatus();
+
                     destination = retriveRequest.getDestination();
+                    destinationLocation = new LatLng(
+                            Double.parseDouble(destination.getLatitude()),
+                            Double.parseDouble(destination.getLongitude())
+                    );
+
+                    destination.getPostalCode();
+                    destination.getNeighborhood();
+                    destination.getNumber();
+                    destination.getCity();
+
+                    Log.d("passenger", String.valueOf(passengerLocation));
+
+
+                    passengerId = passenger.getId();
+                    Log.d("destination", String.valueOf(destinationLocation));
+                    statusRequest = retriveRequest.getStatus();
 
                     changeInterfaceStatusRequest(statusRequest);
 
+                    requestActive(passengerId);
                 }
             }
 
@@ -179,25 +202,33 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
         });
     }
 
-private void changeInterfaceStatusRequest(String request) {
-        switch (request) {
-            case Request.STATUS_WAITING:
-                requestWaiting();
-                break;
-            case Request.STATUS_ON_MY_AWAY:
-                requestStart();
-                break;
-            case Request.STATUS_START_TRIP:
-                requestStratTrip();
-                break;
-            case Request.STATUS_FINALISED:
-                requestFinalizedTrip();
-                break;
-            case Request.STATUS_CANCEL:
-                requestCanceled();
-                break;
+    private void requestActive(String passengerId) {
 
-        }
+        DatabaseReference activeRequestRef = databaseReference.child("requests_active")
+                .child(passengerId)
+                .child("destination");
+
+        activeRequestRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                requestActive = snapshot.getValue(RequestActive.class);
+                if (requestActive != null) {
+
+                    destinationLocationActive = new LatLng(
+                            Double.parseDouble(requestActive.getLatitude()),
+                            Double.parseDouble(requestActive.getLongitude())
+                    );
+
+                }
+
+                Log.d("firebase", "requestActive: " + requestActive + " Location: " + destinationLocationActive );
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
@@ -216,87 +247,82 @@ private void changeInterfaceStatusRequest(String request) {
 
         buttonAcceptTrip.setText(R.string.a_caminho_do_passageiro);
         fabRoute.setVisibility( FloatingActionButton.VISIBLE );
+        buttonAcceptTrip.setEnabled(false);
 
         usersMarkers.addMarkerDriverLocation( driverLocation, driver.getName() );
 
         usersMarkers.addMarkerPassengerLocation( passengerLocation, passenger.getName() );
 
-        usersMarkers.centralizePassengerAndDriverLocation( this ,driverLocation , passengerLocation, mMap );
+        usersMarkers.centralizeTwoMarker(  driverLocation, passengerLocation, mMap, this );
 
-        startMonitoringDriving( driver, passengerLocation , Request.STATUS_START_TRIP );
+        monitoringUsers.startMonitoringDriving( driver, passengerLocation, Constants.STATUS_START_TRIP, mMap, retriveRequest );
 
     }
 
-    private void requestStratTrip() {
+    private void requestStartTrip() {
 
-        fabRoute.setVisibility(View.VISIBLE);
+        fabRoute.setVisibility(View.GONE);
         buttonAcceptTrip.setText(R.string.a_caminho_do_destino);
-
-       /*
-        DatabaseReference requests = databaseReference.child("requests");
-        String idRequest = requests.getKey();
-        Log.d("firebase", idRequest);
-
-        databaseReference.child(idRequest).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-
-                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+        buttonAcceptTrip.setEnabled(false);
 
 
+        usersMarkers.addMarkerDriverLocation(driverLocation, driver.getName() );
 
-                }
-            }
-        });*/
+        Log.d("requestStartTrip", "requestStartTrip: " + destinationLocationActive);
 
+        if (  requestActive != null ) {
+            LatLng destinationLocationActive = new LatLng(
+                    Double.parseDouble(requestActive.getLatitude()),
+                    Double.parseDouble(requestActive.getLongitude())
+            );
 
-        LatLng destinationLocation = new LatLng(
-                Double.parseDouble(destination.getLatitude()),
-                Double.parseDouble(destination.getLongitude())
-        );
+            usersMarkers.addMarkerDestination(destinationLocationActive,
+                    "Destino: " +  destination.getNeighborhood()
+                            + " Rua: " + destination.getRoad()
+                            + " nº: " + destination.getNumber()
+                            + " CP: " + destination.getPostalCode()
+            );
 
-        Log.d("requestStratTrip", "requestStratTrip: " + destinationLocation);
+            usersMarkers.centralizeTwoMarker(  driverLocation, destinationLocationActive, mMap , this);
 
-        usersMarkers.addMarkerDriverLocation(driverLocation, driver.getName());
+            monitoringUsers.startMonitoringDriving( driver, destinationLocationActive , Constants.STATUS_FINALISED, mMap, retriveRequest );
 
-        usersMarkers.addMarkerDestino( destinationLocation, "Destino");
-
-        usersMarkers.centralizePassengerAndDriverLocation( this, driverLocation, destinationLocation, mMap );
-
-        startMonitoringDriving(driver, destinationLocation , Request.STATUS_START_TRIP );
-
+        }
     }
+
 
     private void requestFinalizedTrip() {
 
         fabRoute.setVisibility(View.GONE);
+        buttonAcceptTrip.setVisibility(View.GONE);
         requestAccepted = false;
 
 
-        LatLng locationDestination = new LatLng(
-                Double.parseDouble(destination.getLatitude()),
-                Double.parseDouble(destination.getLongitude())
-        );
+        if (requestActive != null) {
+            LatLng locationDestination = new LatLng(
+                    Double.parseDouble(requestActive.getLatitude()),
+                    Double.parseDouble(requestActive.getLongitude())
+            );
 
-        usersMarkers.addMarkerDestino(locationDestination, "Destino"  + destination.getRoad() );
+            LatLng driverLocation = new LatLng(
+                    Double.parseDouble(driver.getLatitude()),
+                    Double.parseDouble(driver.getLongitude())
+            );
 
-        usersMarkers.centralizeMarKer(locationDestination);
+            usersMarkers.addMarkerDriverLocation(driverLocation , driver.getName() );
+            usersMarkers.centralizeMarKer(driverLocation);
 
-        float distance = Locations.calculateDistance(passengerLocation, locationDestination);
-        float price = distance * 8;
-        DecimalFormat decimal = new DecimalFormat("0.00");
-        String result = decimal.format(price);
+            float distance = Locations.calculateDistance(passengerLocation, locationDestination);
+            float price = distance * 8;
+            DecimalFormat decimal = new DecimalFormat("0.00");
+            String result = decimal.format(price);
 
-        buttonAcceptTrip.setText(
-                String.format("%s%s",
-                        getString(R.string.fim_da_viagem) + result)
-        );
+            buttonAcceptTrip.setText(
+                    String.format("%s%s", getString(R.string.fim_da_viagem), result ));
 
+            tripSummaryDialog.dialogTripSummary(result , this);
+
+        }
     }
 
     private void requestCanceled() {
@@ -304,80 +330,39 @@ private void changeInterfaceStatusRequest(String request) {
         Toast.makeText(this, "Viagem cancelada pelo passageiro!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, RequestsActivity.class);
         startActivity(intent);
-    }
 
-
-    private void startMonitoringDriving( final Users uOrigem, LatLng locationDistaniton,final String status) {
-
-        DatabaseReference userLocation = FirebaseConfiguration.getFirebaseDatabase()
-                .child("location_user");
-
-        GeoFire geoFire = new GeoFire(userLocation);
-        Circle passengerCircle = mMap.addCircle(
-                new CircleOptions()
-                        .center(locationDistaniton)
-                        .radius(20)// meters
-                        .fillColor( Color.argb(90, 255, 153, 0) )
-                        .strokeColor( Color.argb(190, 255, 153, 0) )
-
-        );
-
-        GeoQuery geoQuery = geoFire.queryAtLocation(
-                new GeoLocation(
-                        locationDistaniton.latitude,
-                        locationDistaniton.longitude
-                ), 0.020 //  meters
-        );
-
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-
-                if( key.equals( uOrigem.getId() ) ){
-                    Log.d("onKeyEntered", "onKeyEntered: " + key + " passenger it's on location: " + location);
-
-                    retriveRequest.setStatus(status);
-                    retriveRequest.updateRequest();
-
-                    geoQuery.removeAllListeners();
-                    passengerCircle.remove();
-
-                }else if (key.equals( uOrigem.getId() ) ){
-                    Log.d("onKeyEntered", "onKeyEntered: " + key + " driver it's on location: " + location);
-                }
-            }
-
-            @Override
-            public void onKeyExited(String key) {
-                Log.d("onKeyExited", "onKeyExited: " + key );
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-                Log.d("onKeyMoved", "onKeyMoved: " + key + " location: " + location);
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-                Log.d("onGeoQueryReady", "onGeoQueryReady: " );
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-                Log.d("onGeoQueryError", "onGeoQueryError: " + error );
-            }
-        });
     }
 
     private void acceptTrip() {
 
         retriveRequest = new Request();
-        retriveRequest.setId(idRequest);
+        retriveRequest.setId(requestId);
         retriveRequest.setDriver(driver);
-        retriveRequest.setStatus(Request.STATUS_ON_MY_AWAY);
+        retriveRequest.setStatus(Constants.STATUS_ON_MY_AWAY);
         retriveRequest.updateDriverStatus();
 
     }
+
+    private void changeInterfaceStatusRequest(String request) {
+        switch (request) {
+            case Constants.STATUS_WAITING:
+                requestWaiting();
+                break;
+            case Constants.STATUS_ON_MY_AWAY:
+                requestStart();
+                break;
+            case Constants.STATUS_START_TRIP:
+                requestStartTrip();
+                break;
+            case Constants.STATUS_FINALISED:
+                requestFinalizedTrip();
+                break;
+            case Constants.STATUS_CANCEL:
+                requestCanceled();
+                break;
+        }
+    }
+
 
 
     private void recoverUserLocation() {
@@ -386,7 +371,7 @@ private void changeInterfaceStatusRequest(String request) {
 
         locationListener = new LocationListener() {
             @Override
-            public void onLocationChanged(@NonNull android.location.Location location) {
+            public void onLocationChanged(@NonNull Location location) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 driverLocation = new LatLng(latitude, longitude);
@@ -396,10 +381,9 @@ private void changeInterfaceStatusRequest(String request) {
                 driver.setLatitude(String.valueOf(latitude));
                 driver.setLongitude(String.valueOf(longitude));
                 retriveRequest.setDriver(driver);
-                retriveRequest.upadateDriverLocation();
+                retriveRequest.updateDriverLocation();
 
                 changeInterfaceStatusRequest(statusRequest);
-
 
             }
 
@@ -411,7 +395,8 @@ private void changeInterfaceStatusRequest(String request) {
         };
 
         if (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                this, Manifest.permission.ACCESS_FINE_LOCATION)
+                 == PackageManager.PERMISSION_GRANTED
         ) {
 
             locationManager.requestLocationUpdates(
@@ -429,11 +414,12 @@ private void changeInterfaceStatusRequest(String request) {
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         usersMarkers = new UsersMarkers(mMap);
+        monitoringUsers = new MonitoringUsers();
 
         recoverUserLocation();
     }
 
-    private void compoments() {
+    private void components() {
 
         setSupportActionBar(binding.toolbar);
 
@@ -448,6 +434,8 @@ private void changeInterfaceStatusRequest(String request) {
         buttonAcceptTrip = binding.buttonAcceptTrip;
 
         databaseReference = FirebaseConfiguration.getFirebaseDatabase();
+
+        tripSummaryDialog = new TripSummaryDialog();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.driver_map);
@@ -469,7 +457,7 @@ private void changeInterfaceStatusRequest(String request) {
         }
 
         if (statusRequest != null && !statusRequest.isEmpty()) {
-            retriveRequest.setStatus(Request.STATUS_CLOSED);
+            retriveRequest.setStatus(Constants.STATUS_CLOSED);
             retriveRequest.updateRequest();
         }
 

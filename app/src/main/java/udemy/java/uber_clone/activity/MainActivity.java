@@ -26,10 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonSignIn;
     private Button buttonRegister;
 
-   // FirebaseAuth firebaseConfiguration ;
 
-
-    private  String[] permissions = new String[]{
+    private final String[] permissions = new String[]{
             android.Manifest.permission.ACCESS_FINE_LOCATION
 
     };
