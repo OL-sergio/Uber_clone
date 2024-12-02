@@ -1,3 +1,5 @@
+import org.gradle.internal.impldep.com.jcraft.jsch.ConfigRepository.defaultConfig
+
 pluginManagement {
     repositories {
         google {

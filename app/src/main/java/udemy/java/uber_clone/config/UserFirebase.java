@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 import udemy.java.uber_clone.activity.PassengerActivity;
 import udemy.java.uber_clone.activity.RequestsActivity;
 import udemy.java.uber_clone.model.Users;
@@ -23,19 +25,26 @@ import udemy.java.uber_clone.model.Users;
 public class UserFirebase {
 
     private static FirebaseUser getUserFirebase() {
-        FirebaseAuth user = FirebaseConfiguration.getFirebaseAuth();
-        return user.getCurrentUser();
-
+        if (FirebaseConfiguration.getFirebaseAuth() != null) {
+            FirebaseAuth user = FirebaseConfiguration.getFirebaseAuth();
+            return user.getCurrentUser();
+        }
+        return null;
     }
 
 
 public static Users getUserDataLogged(){
-        FirebaseUser firebaseUser = getUserFirebase();
         Users user = new Users();
-        user.setId(firebaseUser.getUid());
-        user.setName(firebaseUser.getDisplayName());
-        user.setEmail(firebaseUser.getEmail());
-        return user;
+        FirebaseUser firebaseUser = getUserFirebase();
+            if(firebaseUser != null){
+                user.setId(firebaseUser.getUid());
+                user.setName(firebaseUser.getDisplayName());
+                user.setEmail(firebaseUser.getEmail());
+                return user;
+            } else {
+                Log.e("UserFirebase", "User is not logged in");
+                return null;
+            }
     }
 
     public static boolean updateUserName(String name) {
@@ -58,7 +67,7 @@ public static Users getUserDataLogged(){
     }
 
 
-    public static void rediretUserLoogedIn(Activity activity) {
+    public static void redirectUserLoggedIn(Activity activity) {
 
         FirebaseUser user = getUserFirebase();
 
@@ -95,32 +104,38 @@ public static Users getUserDataLogged(){
     }
 
     public static String getUserId() {
-        return getUserFirebase().getUid();
+        return Objects.requireNonNull(getUserFirebase()).getUid();
     }
 
     public static void updatedDataLocation(double latitude, double longitude) {
         DatabaseReference userLocation = FirebaseConfiguration.getFirebaseDatabase()
                 .child("location_user");
 
-        GeoFire geoFire = new GeoFire(userLocation);
-
-        Users userLogged =  UserFirebase.getUserDataLogged();
-
-        geoFire.setLocation(
-                userLogged.getId()
-                ,new GeoLocation(
-                        latitude , longitude
-                ),
-                new GeoFire.CompletionListener() {
-                    @Override
-                    public void onComplete(String key, DatabaseError error) {
-                        if (error != null) {
-                            Log.d("Erro", "Erro saving location");
-                        }else {
-                            Log.d("Success", "Location saved");
-                        }
-                    }
-                }
-        );
+        if (userLocation != null ){
+            Users userLogged =  UserFirebase.getUserDataLogged();
+              if (userLogged != null){
+                  GeoFire geoFire = new GeoFire(userLocation);
+                  geoFire.setLocation(
+                          userLogged.getId()
+                          , new GeoLocation(
+                                  latitude, longitude
+                          ),
+                          new GeoFire.CompletionListener() {
+                              @Override
+                              public void onComplete(String key, DatabaseError error) {
+                                  if (error != null) {
+                                      Log.d("Erro", "Erro saving location");
+                                  } else {
+                                      Log.d("Success", "Location saved");
+                                  }
+                              }
+                          }
+                  );
+              } else {
+                  Log.e("User Firebase", "User  data is null. Cannot update location.");
+          }
+        } else {
+            Log.e("FirebaseConfiguration", "User  location reference is null.");
+        }
     }
 }

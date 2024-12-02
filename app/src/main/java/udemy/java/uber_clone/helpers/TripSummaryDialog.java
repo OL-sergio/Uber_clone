@@ -23,6 +23,11 @@ public class TripSummaryDialog extends AppCompatActivity {
 
     public void dialogTripSummaryClose(String result , Request retriveRequest , Context context ) {
 
+        if (context == null) {
+            // Handle the null context case
+            return;
+        }
+
         Activity activity = (Activity) context;
 
         if (activity.isFinishing() || activity.isDestroyed()) {
@@ -35,7 +40,7 @@ public class TripSummaryDialog extends AppCompatActivity {
                 .setCancelable(false)
                 .setNegativeButton(R.string.encerrar_viagem, (dialog, which) -> {
                     try {
-                        retriveRequest.setStatus(Request.STATUS_CLOSED);
+                        retriveRequest.setStatus(Constants.STATUS_CLOSED);
                         retriveRequest.updateRequest();
                         Intent intent = new Intent(activity, PassengerActivity.class);
                         activity.startActivity(intent);;

@@ -34,6 +34,7 @@ import udemy.java.uber_clone.R;
 import udemy.java.uber_clone.adapter.RequestsAdapter;
 import udemy.java.uber_clone.config.FirebaseConfiguration;
 import udemy.java.uber_clone.databinding.ActivityRequestsBinding;
+import udemy.java.uber_clone.helpers.Constants;
 import udemy.java.uber_clone.helpers.RecyclerItemClickListener;
 import udemy.java.uber_clone.config.UserFirebase;
 import udemy.java.uber_clone.model.Request;
@@ -69,8 +70,6 @@ public class RequestsActivity extends AppCompatActivity {
     }
 
     private void addEventClickRecyclerView() {
-
-
 
         recyclerViewRequests.addOnItemTouchListener(new RecyclerItemClickListener(
                         getApplicationContext(),
@@ -108,9 +107,9 @@ public class RequestsActivity extends AppCompatActivity {
                     Request request = data.getValue(Request.class);
 
                     assert request != null;
-                    if (request.getStatus().equals(Request.STATUS_ON_MY_AWAY)
-                            || request.getStatus().equals(Request.STATUS_START_TRIP)
-                            || request.getStatus().equals(Request.STATUS_FINALISED)
+                    if (request.getStatus().equals(Constants.STATUS_ON_MY_AWAY)
+                            || request.getStatus().equals(Constants.STATUS_START_TRIP)
+                            || request.getStatus().equals(Constants.STATUS_FINALISED)
                     ) {
 
                         driver = request.getDriver();
@@ -140,7 +139,7 @@ public class RequestsActivity extends AppCompatActivity {
     private void retrieveRequests() {
 
         DatabaseReference requestsReference = databaseReference.child("requests");
-        Query requestSearch = requestsReference.orderByChild("status").equalTo(Request.STATUS_WAITING);
+        Query requestSearch = requestsReference.orderByChild("status").equalTo(Constants.STATUS_WAITING);
 
         requestSearch.addValueEventListener(new ValueEventListener() {
             @Override
@@ -174,23 +173,6 @@ public class RequestsActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_user, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menuLogout) {
-            auth.signOut();
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        }
-        return true;
     }
 
     private void recoverUserLocation() {
@@ -243,13 +225,33 @@ public class RequestsActivity extends AppCompatActivity {
         }
     }
 
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_user, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menuLogout) {
+            auth.signOut();
+            Intent intent = new Intent(RequestsActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void components() {
 
         setSupportActionBar(binding.toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.limedSprude_100));
+            actionBar.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.limedSpruce_100));
             actionBar.setTitle(R.string.requests);
         }
 

@@ -1,10 +1,12 @@
 package udemy.java.uber_clone.model;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
 
 import udemy.java.uber_clone.config.FirebaseConfiguration;
+import udemy.java.uber_clone.helpers.Constants;
 
 public class Users implements Serializable {
     private String id;
@@ -21,8 +23,8 @@ public class Users implements Serializable {
     public void saveUser(){
         DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
         DatabaseReference users = databaseReference
-                .child("users")
-                .child(getId());
+                .child( Constants.USERS )
+                .child( getId() );
         users.setValue(this);
     }
 
@@ -51,10 +53,11 @@ public class Users implements Serializable {
         this.email = email;
     }
 
+    @Exclude
     public String getPassword() {
         return password;
     }
-
+    @Exclude
     public void setPassword(String password) {
         this.password = password;
     }

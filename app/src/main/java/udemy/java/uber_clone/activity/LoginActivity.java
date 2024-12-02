@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.limedSprude_100));
+            actionBar.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.limedSpruce_100));
             //actionBar.setTitle(R.string.aceder_a_minha_conta);
         }
 
@@ -91,8 +91,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             //Verificar o tipo de utilizador
                             // Motorista / Passageiro
-                            UserFirebase.rediretUserLoogedIn(LoginActivity.this);
-
+                            UserFirebase.redirectUserLoggedIn(LoginActivity.this);
                             Toast.makeText(LoginActivity.this, R.string.login_realizado_com_sucesso, Toast.LENGTH_LONG).show();
                         }else {
                             String exceptionError;
@@ -106,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                                 exceptionError = getString(R.string.erro_realizar_login_utilizador) + e.getMessage();
                                 e.printStackTrace();
                             }
+
 
                             Toast.makeText(LoginActivity.this, exceptionError, Toast.LENGTH_SHORT).show();
                         }

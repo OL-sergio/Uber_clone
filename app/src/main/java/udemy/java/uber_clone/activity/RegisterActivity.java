@@ -54,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.limedSprude_100));
+            actionBar.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.limedSpruce_100));
             //actionBar.setTitle(R.string.criar_uma_conta);
         }
 

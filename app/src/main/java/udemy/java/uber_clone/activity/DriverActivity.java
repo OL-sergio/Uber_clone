@@ -3,6 +3,7 @@ package udemy.java.uber_clone.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,7 +24,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -77,18 +77,13 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
     private TripSummaryDialog tripSummaryDialog;
 
 
-    /**
-     *
-     * Lat/lon destino:-23.556407, -46.662365 (Av. Paulista, 2064)
-     * Lat/lon passageiro: -23.562791, -46.654668 (Av. Paulista, 2439)
-     * Lat/lon Motorista (a caminho):
-     *  inicial: -23.563196, -46.650607
-     *  intermediaria: -23.564801, -46.652196
-     *  final: -23.562801, -46.654660 (esse local foi corrigido com relação ao vídeo)
-     *  Rua Augusta, 1611, São Paulo, 01310-928, Brasil
-     **/
-
-
+    /// Lat/lon destino:-23.556407, -46.662365 ( Av. Paulista, 2064 )
+    /// Lat/lon passageiro: -23.562791, -46.654668 ( Av. Paulista, 2439 )
+    /// Lat/lon Motorista (a caminho):
+    ///  inicial: -23.563196, -46.650607
+    ///  intermediaria: -23.564801, -46.652196
+    ///  final: -23.562801, -46.654660 (esse local foi corrigido com rela&ccedil;&atilde;o ao v&iacute;deo)
+    ///  Rua Augusta, 1611, S&atilde;o Paulo, 01310-928, Brasil
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,9 +199,9 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private void requestActive(String passengerId) {
 
-        DatabaseReference activeRequestRef = databaseReference.child("requests_active")
+        DatabaseReference activeRequestRef = databaseReference.child( Constants.REQUESTS_ACTIVE )
                 .child(passengerId)
-                .child("destination");
+                .child( Constants.DESTINATION );
 
         activeRequestRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -425,7 +420,7 @@ public class DriverActivity extends AppCompatActivity implements OnMapReadyCallb
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.limedSprude_100));
+            actionBar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.limedSpruce_100)) );
             actionBar.setTitle("Viagem iniciada - Motorista");
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

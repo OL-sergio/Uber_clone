@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-06T18:13:18.697287800Z">
+        <DropdownSelection timestamp="2024-11-11T18:24:55.078292800Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\sergi\.android\avd\Passenger_Pixel_6a_API_29_1.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\sergi\.android\avd\Passenger_Pixel_8_API_29.avd" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -27,6 +27,9 @@
         </DialogSelection>
       </SelectionState>
       <SelectionState runConfigName="PassengerActivity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="TripSummaryDialog">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

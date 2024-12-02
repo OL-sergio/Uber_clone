@@ -2,6 +2,7 @@ package udemy.java.uber_clone.model;
 
 import android.media.MediaPlayer;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -9,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import udemy.java.uber_clone.config.FirebaseConfiguration;
+import udemy.java.uber_clone.config.UserFirebase;
+import udemy.java.uber_clone.helpers.Constants;
 
 public class Request {
 
@@ -18,13 +21,6 @@ public class Request {
     private Users driver;
     private Destination destination;
 
-    public static final String STATUS_WAITING = "WAITING";
-    public static final String STATUS_ON_MY_AWAY = "ONMYWAY";
-    public static final String STATUS_START_TRIP = "START_TRIP";
-    public static final String STATUS_FINALISED = "FINALISED";
-    public static final String STATUS_CLOSED = "CLOSED";
-    public static final String STATUS_CANCEL = "CANCEL";
-
 
     public Request() {
     }
@@ -32,23 +28,23 @@ public class Request {
     public void saveRequest() {
 
         DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
-        DatabaseReference requests = databaseReference.child("requests");
+        DatabaseReference requests = databaseReference.child( Constants.REQUESTS );
 
         String idRequest = requests.push().getKey();
         setId( idRequest );
 
-        requests.child(getId()).setValue(this);
+        requests.child( getId() ).setValue(this);
 
     }
 
     public void updateDriverStatus() {
         DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
-        DatabaseReference requests = databaseReference.child("requests");
-        DatabaseReference requestsID = requests.child(getId());
+        DatabaseReference requests = databaseReference.child( Constants.REQUESTS );
+        DatabaseReference requestsID = requests.child( getId());
 
-        Map object = new HashMap();
-        object.put("driver", getDriver());
-        object.put("status", getStatus());
+        Map<String, Object> object = new HashMap<>();
+        object.put( Constants.DRIVER , getDriver() );
+        object.put( Constants.STATUS , getStatus() );
 
         requestsID.updateChildren( object );
 
@@ -57,14 +53,14 @@ public class Request {
     public void updateDriverLocation() {
         DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
         DatabaseReference requests = databaseReference
-                .child("requests");
+                .child( Constants.REQUESTS );
 
-        DatabaseReference requestsID = requests.child(getId())
-                            .child("driver");
+        DatabaseReference requestsID = requests.child( getId())
+                            .child( Constants.DRIVER );
 
-        Map object = new HashMap();
-        object.put( "latitude", getDriver().getLatitude() );
-        object.put( "longitude", getDriver().getLongitude() );
+        Map<String, Object> object = new HashMap<>();
+        object.put( Constants.LATITUDE , getDriver().getLatitude() );
+        object.put( Constants.LONGITUDE , getDriver().getLongitude() );
 
         requestsID.updateChildren( object );
 
@@ -73,11 +69,11 @@ public class Request {
 
     public void updateRequest() {
         DatabaseReference databaseReference = FirebaseConfiguration.getFirebaseDatabase();
-        DatabaseReference requests = databaseReference.child("requests");
-        DatabaseReference requestsID = requests.child(getId());
+        DatabaseReference requests = databaseReference.child( Constants.REQUESTS );
+        DatabaseReference requestsID = requests.child( getId() );
 
-        Map object = new HashMap();
-        object.put("status", getStatus());
+        Map<String, Object> object = new HashMap<>();
+        object.put( Constants.STATUS , getStatus());
 
         requestsID.updateChildren( object );
 

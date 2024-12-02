@@ -42,6 +42,12 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/_8sdp"
+            android:orientation="horizontal">
+
         <EditText
             android:id="@+id/editTextText_origin"
             android:layout_width="match_parent"
@@ -56,10 +62,22 @@
             android:ems="10"
             android:hint="@string/interduza_sua_localizac_o"
             android:inputType="textPersonName"
-            android:textColor="@color/limedSprude_100"
-            android:textColorHint="@color/limedSprude_100"
+            android:textColor="@color/limedSpruce_100"
+            android:textColorHint="@color/limedSpruce_100"
             android:textSize="@dimen/_18sdp"
+            android:enabled="false"
             tools:ignore="RtlSymmetry" />
+
+            <ImageButton
+                android:id="@+id/imageButton_saveSelectedPassengerLocation"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/ic_location_searching_24"
+                android:scaleX="0.6"
+                android:scaleY="0.6"/>
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editTextText_destination"
@@ -76,8 +94,8 @@
             android:ems="10"
             android:hint="@string/interduza_o_destino"
             android:inputType="textPersonName"
-            android:textColor="@color/limedSprude_100"
-            android:textColorHint="@color/limedSprude_100"
+            android:textColor="@color/limedSpruce_100"
+            android:textColorHint="@color/limedSpruce_100"
             android:textSize="@dimen/_18sdp" />
 
     </LinearLayout>

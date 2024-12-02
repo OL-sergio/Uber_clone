@@ -11,43 +11,58 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <View
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="200dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/img_logo" />
+            android:padding="@dimen/_4sdp"
+            android:background="@drawable/dw_rectangle_white"
+            >
+
+            <ImageView
+                android:id="@+id/image_logo"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/dw_image_logo"
+                android:importantForAccessibility="no"
+                android:scaleType="centerInside"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:background="@color/white_100"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:layout_marginTop="350dp"
             android:layout_marginStart="24dp"
+            android:layout_marginTop="350dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp">
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/dw_rectangle_white"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
             <Button
                 android:id="@+id/button_sign_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/dw_button_ripple_effect_green_hot"
                 android:text="@string/entrar"
                 android:textAllCaps="true"
-                app:backgroundTint="@null"
                 android:textColor="@color/white_100"
-                android:background="@drawable/dw_button_ripple_effect_green_hot"
-               />
+                app:backgroundTint="@null" />
 
             <View
                 android:layout_width="8dp"
@@ -57,14 +72,13 @@
                 android:id="@+id/button_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/dw_button_ripple_effect_green_grey"
                 android:text="@string/criar_conta"
                 android:textAllCaps="true"
-                app:backgroundTint="@null"
                 android:textColor="@color/white_100"
-                android:background="@drawable/dw_button_ripple_effect_green_grey"
-                />
+                app:backgroundTint="@null" />
 
         </LinearLayout>
     </LinearLayout>

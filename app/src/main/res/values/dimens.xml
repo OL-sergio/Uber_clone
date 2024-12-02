@@ -9,4 +9,6 @@
     <dimen name="_36sdp">36dp</dimen>
     <dimen name="_22sdp">22dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="_40sdp">40dp</dimen>
+    <dimen name="_50sdp">50dp</dimen>
 </resources>

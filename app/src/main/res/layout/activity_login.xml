@@ -52,13 +52,14 @@
         android:id="@+id/button_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/dw_button_ripple_effect_green_hot"
-        app:backgroundTint="@null"
-        android:text="@string/entar"
+        android:text="@string/entrar"
         android:textAllCaps="true"
         android:textColor="@color/white_100"
+        app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
