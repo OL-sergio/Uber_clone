@@ -7,8 +7,6 @@
 
 *An Android application that replicates the core functionality of Uber, providing a platform for ride-sharing services with separate interfaces for passengers and drivers.*
 
-[![Download APK](https://img.shields.io/badge/Download-APK-green?style=for-the-badge&logo=android)](link-to-apk)
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge&logo=youtube)](link-to-demo)
 
 </div>
 
