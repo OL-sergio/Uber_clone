@@ -1,16 +1,56 @@
 
-## 📱 Featured Application: Uber Clone
+## 📱  Uber Clone
 
 <div align="center">
 
 ### 🚗 Uber Clone - Ride Sharing Platform
 
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?style=for-the-badge&logo=kotlin&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFA000?style=for-the-badge&logo=firebase&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)
+
+
 *An Android application that replicates the core functionality of Uber, providing a platform for ride-sharing services with separate interfaces for passengers and drivers.*
+  
+</div>
+
+## Objetivos
+
+- Praticar desenvolvimento Android com **Java** e **Kotlin**.
+- Integrar serviços do **Firebase** (autenticação, banco de dados, notificações).
+- Implementar geolocalização e permissões dinâmicas.
+- Estruturar um projeto modular e escalável.
+  
+
+<div>
+    
+ ## Funcionalidade por Classe
+
+- **DriverActivity**: Interface do motorista para aceitar, acompanhar e finalizar corridas.
+- **LoginActivity**: Tela de autenticação de usuários via Firebase.
+- **MainActivity**: Seleção do perfil (passageiro ou motorista).
+- **PassengerActivity**: Solicitação de corrida, escolha de destino e acompanhamento do motorista.
+- **RegisterActivity**: Cadastro de novos usuários e definição de perfil.
+- **RequestsActivity**: Lista de solicitações de corridas para motoristas.
+- **RequestsAdapter**: Adapter para exibir solicitações em RecyclerView.
+- **FirebaseConfiguration**: Inicialização e configuração do Firebase.
+- **UserFirebase**: Métodos utilitários para manipulação de dados do usuário no Firebase.
+- **Constants**: Armazena constantes globais do projeto.
+- **Locations**: Funções auxiliares para manipulação de localização.
+- **MonitoringUsers**: Monitora localização dos usuários em tempo real.
+- **Permissions**: Gerenciamento de permissões de localização.
+- **RecyclerItemClickListener**: Listener genérico para cliques em itens de RecyclerView.
+- **TripSummaryDialog**: Diálogo para exibir resumo da corrida.
+- **UsersMarkers**: Gerenciamento de marcadores personalizados no mapa.
+- **Destination, Request, RequestActive, Users**: Modelos de dados para destinos, solicitações, status de corridas e usuários.
 
 
 </div>
 
-### ✨ Key Features
+
+## ✨ Key Features
 
 <div align="center">
 
@@ -24,7 +64,9 @@
 
 </div>
 
-### 🛠️ Technology Stack
+<div>
+    
+## 🛠️ Technology Stack
 
 <div align="center">
 
@@ -35,6 +77,8 @@
 ![Material Design](https://img.shields.io/badge/Material%20Design-757575?style=flat-square&logo=materialdesign&logoColor=white)
 
 </div>
+</div>
+
 
 
 <div align="center">
@@ -51,6 +95,7 @@
 | **UI Framework** | Material Design Components | Modern interface design |
 
 </div>
+
 
 
 ### 🚀 Quick Start Guide
@@ -88,6 +133,7 @@ cd Uber_clone
 4. Run the application
 
 </details>
+
 
 <details>
 <summary><b>📁 Project Structure</b></summary>
