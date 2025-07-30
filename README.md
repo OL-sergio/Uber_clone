@@ -18,33 +18,33 @@
 
 ## Objetivos
 
-- Praticar desenvolvimento Android com **Java** e **Kotlin**.
-- Integrar serviços do **Firebase** (autenticação, banco de dados, notificações).
-- Implementar geolocalização e permissões dinâmicas.
-- Estruturar um projeto modular e escalável.
+- Practice Android development with **Java** and **Kotlin**.
+- Integrate **Firebase** services (authentication, database, notifications).
+- Implement geolocation and dynamic permissions.
+- Structure a modular and scalable project.
   
 
 <div>
     
  ## Funcionalidade por Classe
 
-- **DriverActivity**: Interface do motorista para aceitar, acompanhar e finalizar corridas.
-- **LoginActivity**: Tela de autenticação de usuários via Firebase.
-- **MainActivity**: Seleção do perfil (passageiro ou motorista).
-- **PassengerActivity**: Solicitação de corrida, escolha de destino e acompanhamento do motorista.
-- **RegisterActivity**: Cadastro de novos usuários e definição de perfil.
-- **RequestsActivity**: Lista de solicitações de corridas para motoristas.
-- **RequestsAdapter**: Adapter para exibir solicitações em RecyclerView.
-- **FirebaseConfiguration**: Inicialização e configuração do Firebase.
-- **UserFirebase**: Métodos utilitários para manipulação de dados do usuário no Firebase.
-- **Constants**: Armazena constantes globais do projeto.
-- **Locations**: Funções auxiliares para manipulação de localização.
-- **MonitoringUsers**: Monitora localização dos usuários em tempo real.
-- **Permissions**: Gerenciamento de permissões de localização.
-- **RecyclerItemClickListener**: Listener genérico para cliques em itens de RecyclerView.
-- **TripSummaryDialog**: Diálogo para exibir resumo da corrida.
-- **UsersMarkers**: Gerenciamento de marcadores personalizados no mapa.
-- **Destination, Request, RequestActive, Users**: Modelos de dados para destinos, solicitações, status de corridas e usuários.
+- **DriverActivity**: Driver interface to accept, track, and complete rides.
+- **LoginActivity**: User authentication screen via Firebase.
+- **MainActivity**: Profile selection (passenger or driver).
+- **PassengerActivity**: Ride request, destination selection, and driver tracking.
+- **RegisterActivity**: New user registration and profile definition.
+- **RequestsActivity**: List of ride requests for drivers.
+- **RequestsAdapter**: Adapter to display requests in RecyclerView.
+- **FirebaseConfiguration**: Firebase initialization and configuration.
+- **UserFirebase**: Utility methods for user data manipulation in Firebase.
+- **Constants**: Stores global project constants.
+- **Locations**: Helper functions for location manipulation.
+- **MonitoringUsers**: Monitors user locations in real-time.
+- **Permissions**: Location permission management.
+- **RecyclerItemClickListener**: Generic listener for clicks on RecyclerView items.
+- **TripSummaryDialog**: Dialog to display ride summary.
+- **UsersMarkers**: Custom marker management on the map.
+- **Destination, Request, RequestActive, Users**: Data models for destinations, requests, ride statuses, and users.
 
 
 </div>
@@ -54,13 +54,13 @@
 
 <div align="center">
 
-| 👥 **For Passengers** | 🚗 **For Drivers** | 🔧 **System Features** |
-|:---------------------|:-------------------|:----------------------|
-| 🚗 Request rides with real-time tracking | 🚙 Accept/decline ride requests | 🔐 Secure authentication system |
-| 📍 Set pickup & destination via Maps | 🗺️ Navigate to pickup locations | 👤 Role-based user interface |
-| 💰 View trip costs & payment info | 📊 View passenger & trip details | 🌍 Real-time location tracking |
-| 🔍 Track driver & arrival time | 💳 Process payments & complete trips | 🗣️ Multi-language support |
-| 📱 Cancel rides when needed | 📍 Share location with passengers | 🔄 Live status updates |
+| 👥 **For Passengers**                                  | 🚗 **For Drivers**                               | 🔧 **System Features**                            |
+| :----------------------------------------------------- | :------------------------------------------------- | :------------------------------------------------- |
+| 🚗 Request rides with real-time tracking               | 🚙 Accept/decline ride requests                    | 🔐 Secure authentication system                    |
+| 📍 Set pickup & destination via Maps                   | 🗺️ Navigate to pickup locations                     | 👤 Role-based user interface                       |
+| 💰 View trip costs & payment info                       | 📊 View passenger & trip details                   | 🌍 Real-time location tracking                     |
+| 🔍 Track driver & arrival time                         | 💳 Process payments & complete trips                 | 🗣️ Multi-language support                           |
+| 📱 Cancel rides when needed                             | 📍 Share location with passengers                    | 🔄 Live status updates                              |
 
 </div>
 
@@ -83,16 +83,17 @@
 
 <div align="center">
     
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| **Platform** | Android (API 26+) | Native mobile application |
-| **Language** | Java 8 | Core development language |
-| **Build System** | Gradle with Kotlin DSL | Project automation |
-| **Database** | Firebase Realtime Database & Firestore | Data persistence |
-| **Authentication** | Firebase Authentication | User management |
-| **Maps** | Google Maps Android API | Location services |
-| **Location Services** | GeoFire | Real-time location queries |
-| **UI Framework** | Material Design Components | Modern interface design |
+
+| Component            | Technology                                   | Purpose                                  |
+| :------------------- | :------------------------------------------- | :--------------------------------------- |
+| **Platform**         | Android (API 26+)                           | Native mobile application                |
+| **Language**         | Java 8                                       | Core development language                |
+| **Build System**     | Gradle with Kotlin DSL                      | Project automation                       |
+| **Database**         | Firebase Realtime Database & Firestore      | Data persistence                         |
+| **Authentication**   | Firebase Authentication                     | User management                          |
+| **Maps**             | Google Maps Android API                     | Location services                        |
+| **Location Services** | GeoFire                                      | Real-time location queries               |
+| **UI Framework**     | Material Design Components                  | Modern interface design                  |
 
 </div>
 
